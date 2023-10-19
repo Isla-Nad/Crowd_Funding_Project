@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 {%block contain%}
-
+<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 <a class='btn btn-success' href="{% url "create"%}">Add new project</a>
 <div class="container" style="padding:50px 0px"> 
             
@@ -17,13 +17,8 @@
           <p class="card-text">Created at : {{pro.created_at}}</p>
           <p class="card-text">Uploaded at : {{pro.updated_at}}</p>
           <a href="{% url 'view' pro.id%}" class="btn btn-info">View<a>
-          
-          
+            <a href="{% url 'comment' pro.id%}" class="btn btn-primary"> Rating and Comments<a>
          
-
-
-          
-      </div>
     {%endfor%}
     </div>  
     {%endblock%}

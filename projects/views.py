@@ -1,7 +1,10 @@
 from django.shortcuts import render,redirect,HttpResponse
 from projects.forms import Projectsform
 # from projects.forms import Project_Form
-from projects.models import Projects
+from projects.models import Projects,review
+from django.contrib.auth.models import User
+# from .forms import CommentForm
+
 
 # Create your views here.
 from projects.models import Projects
@@ -41,3 +44,24 @@ def View(request,id):
         return render(request,'view.html',context={"product":filtered_Product[0]})
 
     return HttpResponse("No such student Student ")
+
+
+    
+def review_page(request,id):
+
+    item_details = Projects.objects.get(id=id)
+  
+    if request.method == 'POST':
+        star_rating = request.POST.get('rating')
+        item_review = request.POST.get('item_review')
+
+        item_reviews = review( item=item_details, rating=star_rating, review_desp = item_review)
+        item_reviews.save()
+
+        rating_details = review.objects.filter(item=item_details)
+        context = {'reviews': rating_details}
+        return render(request, 'addcomment.html', context)
+
+    rating_details = review.objects.filter(item=item_details)
+    context = {'reviews': rating_details}
+    return render(request, 'addcomment.html', context)

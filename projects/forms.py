@@ -1,7 +1,7 @@
 from django import forms
 from datetime import datetime
 from categories.models import Category
-
+# from .models import Comment
 from django.forms.widgets import NumberInput
 
 class Projectsform(forms.Form):
@@ -29,6 +29,9 @@ class Projectsform(forms.Form):
                 'class': 'form-control'
             }
         ))
-  
+# class CommentForm(forms.ModelForm):
+#     class Meta:
+#         model = Comment
+#         fields = ['text']
 
     

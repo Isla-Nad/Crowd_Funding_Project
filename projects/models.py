@@ -2,6 +2,7 @@ from django.db import models
 from django.shortcuts import reverse
 from categories.models import Category
 from django.utils import timezone 
+from django.contrib.auth.models import User
 
 class Projects(models.Model):
     title= models.CharField(max_length=30,)
@@ -25,3 +26,9 @@ class Projects(models.Model):
 #     images = models.ImageField(upload_to="projects/images/")
 #     project = models.ForeignKey(Projects, on_delete=models.CASCADE, default=None)  
 
+
+class  review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    item = models.ForeignKey(Projects, on_delete=models.CASCADE,null=True)
+    review_desp = models.CharField(max_length=100)
+    rating = models.IntegerField()
