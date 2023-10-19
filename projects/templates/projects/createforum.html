@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %} {% load static%} {% block contain%}
+<div class="container" style="padding: 50px 0px">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %} {{form}}
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <div>
+    <script src="{% static 'projects/javascript/script.js'%}"></script>
+    {% endblock %}
+  </div>
+</div>
