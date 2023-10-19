@@ -1,0 +1,27 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %} Confirm Delete {% endblock %} {% block content %}
+<div class="container my-4">
+  <h2>Confirm Deletion</h2>
+  <p>Are you sure you want to delete your account?</p>
+
+  <form method="post" class="mb-4">
+    {% csrf_token %}
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required />
+    {% if messages %}
+    <div class="messages">
+      <ul class="errorlist">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    <br />
+    <button type="submit" class="btn btn-outline-danger">Delete</button>
+  </form>
+
+  <a class="btn btn-outline-primary" href="{% url 'accounts.profile' user.id %}">Cancel</a>
+</div>
+
+<script src="{% static 'projects/js/script.js' %}"></script>
+{% endblock %}

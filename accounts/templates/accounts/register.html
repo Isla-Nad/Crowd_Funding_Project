@@ -1,0 +1,8 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Register{% endblock %} {% block content %}
+<h1 class="text-center">Register</h1>
+<form method="post" enctype="multipart/form-data" class="container my-4">
+  {% csrf_token %} {{form}}
+  <button type="submit" class="btn btn-outline-success form-control mt-3">Register</button>
+</form>
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}

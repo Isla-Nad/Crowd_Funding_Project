@@ -1,0 +1,6 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Activation Success{% endblock %} {% block content %}
+<div class="container text-center my-5">
+  <h2>Your account has been successfully activated.</h2>
+  <h3>You can now <a href="{% url 'accounts.login' %}" class="link-info">log in</a>.</h3>
+</div>
+{% endblock%}

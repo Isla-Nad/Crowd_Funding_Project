@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Register{% endblock %} {% block content %}
+<h1 class="text-center">Login</h1>
+<form method="post" class="container my-4" enctype="multipart/form-data">
+  {% csrf_token %}
+  <label for="username">Username:</label>
+  <input type="text" name="username" id="username" required />
+  <br />
+  <label for="password">Password:</label>
+  <input type="password" name="password" id="password" required />
+  <br />
+  <button type="submit" class="btn btn-outline-success form-control mt-3">Login</button>
+</form>
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}

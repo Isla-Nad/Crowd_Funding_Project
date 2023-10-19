@@ -1,0 +1,6 @@
+<h2 class="text-center">Account Activation</h2>
+<p>Thank you for registering with our service. To activate your account, please click the following link:</p>
+<a href="{{ protocol }}://{{ domain }}{% url 'accounts.activate' uidb64=uid token=token %}">Activate your account</a>
+{{ protocol }}://{{ domain }}{% url 'accounts.activate' uidb64=uid token=token %}
+<p>This link will expire in 24 hours.</p>
+<p>If you did not register on our site, please disregard this email.</p>
