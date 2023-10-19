@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
-from projects.models import Projects
+from django.shortcuts import render, redirect, HttpResponse
 from projects.forms import Projectsform
+from projects.models import Projects, review
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -34,3 +35,37 @@ def Createform(request):
             product.save()
         return redirect('projects')
     return render(request, 'projects/createforum.html', context={'form': form})
+
+
+def View(request, id):
+    # filtered_Product= filter(lambda pro: pro['id'] == id, Product)
+    filtered_Product = Projects.objects.filter(id=id)
+    print(filtered_Product)
+    filtered_Product = list(filtered_Product)
+    print(filtered_Product)
+    if filtered_Product:
+        print(filtered_Product[0])
+        return render(request, 'projects/view.html', context={"product": filtered_Product[0]})
+
+    return HttpResponse("No such student Student ")
+
+
+def review_page(request, id):
+
+    item_details = Projects.objects.get(id=id)
+
+    if request.method == 'POST':
+        star_rating = request.POST.get('rating')
+        item_review = request.POST.get('item_review')
+
+        item_reviews = review(
+            item=item_details, rating=star_rating, review_desp=item_review)
+        item_reviews.save()
+
+        rating_details = review.objects.filter(item=item_details)
+        context = {'reviews': rating_details}
+        return render(request, 'projects/addcomment.html', context)
+
+    rating_details = review.objects.filter(item=item_details)
+    context = {'reviews': rating_details}
+    return render(request, 'projects/addcomment.html', context)
