@@ -1,0 +1,94 @@
+{% extends "layouts/base.html" %} {% load static %} {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<style>
+  .checked {
+    color: orange;
+  }
+
+  .rating {
+    margin-top: 40px;
+    border: none;
+    float: left;
+  }
+
+  .rating > label {
+    color: #9c9c9c;
+    font-size: 20px;
+    float: right;
+  }
+
+  .rating > label:before {
+    margin: 5px;
+    font-size: 2em;
+    font-family: FontAwesome;
+    content: "\f005";
+    display: inline-block;
+  }
+
+  .rating > input {
+    display: none;
+  }
+
+  .rating > input:checked ~ label,
+  .rating:not(:checked) > label:hover,
+  .rating:not(:checked) > label:hover ~ label {
+    color: #f79426;
+  }
+
+  .rating > input:checked + label:hover,
+  .rating > input:checked ~ label:hover,
+  .rating > label:hover ~ input:checked ~ label,
+  .rating > input:checked ~ label:hover ~ label {
+    color: #fece31;
+  }
+
+  #star {
+    font-size: 20px;
+    color: grey;
+  }
+
+  #check-star {
+    font-size: 20px;
+  }
+</style>
+<div class="container" style="padding: 50px 0px">
+  <h3>All ratings and reviews</h3>
+  {% for x in reviews %}
+  <p>{{ x.user.username }}</p>
+  <p>{{ x.review_desp }}</p>
+  <div class="rating">
+    {% for i in 1|range:6 %} {% if x.rating >= i %}
+    <i class="fa fa-star checked" id="check-star"></i>
+    {% else %}
+    <i class="fa fa-star no-checked" id="check-star"></i>
+    {% endif %} {% endfor %}
+  </div>
+  <hr />
+  {% endfor %}
+  <form method="post" action="">
+    {% csrf_token %}
+    <div class="col-md-6">
+      <p style="font-weight: 600">Write a review</p>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group required">
+          <div class="rating">
+            {% for i in 1|range:6 %}
+            <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" />
+            <label class="star" for="star{{ i }}" title="Rating: {{ i }}" aria-hidden="true"></label>
+            {% endfor %}
+          </div>
+        </div>
+      </form>
+      <textarea name="item_review" placeholder="Write a review" rows="6" cols="50" id="review-text" required></textarea>
+      <br />
+      <div class="row">
+        <div class="col-md-4">
+          <input type="submit" class="btn btn-primary mt-2" value="Post" />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
