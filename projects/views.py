@@ -1,5 +1,7 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from projects.forms import Projectsform
+# from projects.forms import Project_Form
+from projects.models import Projects
 
 # Create your views here.
 from projects.models import Projects
@@ -28,3 +30,14 @@ def Createform(request):
             product.save()
         return redirect('projects')
     return render(request,'createforum.html',context={'form':form})
+def View(request,id):
+    # filtered_Product= filter(lambda pro: pro['id'] == id, Product)
+    filtered_Product=Projects.objects.filter(id=id)
+    print(filtered_Product)
+    filtered_Product = list(filtered_Product)
+    print(filtered_Product)
+    if filtered_Product:
+        print(filtered_Product[0])
+        return render(request,'view.html',context={"product":filtered_Product[0]})
+
+    return HttpResponse("No such student Student ")

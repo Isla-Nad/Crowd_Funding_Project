@@ -21,4 +21,7 @@ class Projects(models.Model):
     def get_show_url(self):
         url = reverse('View', args=[self.id])
         return url
-  
+# class Image(models.Model):
+#     images = models.ImageField(upload_to="projects/images/")
+#     project = models.ForeignKey(Projects, on_delete=models.CASCADE, default=None)  
+

@@ -3,7 +3,7 @@
 {%block contain%}
 
 <a class='btn btn-success' href="{% url "create"%}">Add new project</a>
-<div class="container"> 
+<div class="container" style="padding:50px 0px"> 
             
     {%for pro in project%}
     <div class="iteeem card " style="width: 18rem; display:inline-block " >
@@ -16,6 +16,8 @@
           <p class="card-text">End time : {{pro.end_time}}</p>
           <p class="card-text">Created at : {{pro.created_at}}</p>
           <p class="card-text">Uploaded at : {{pro.updated_at}}</p>
+          <a href="{% url 'view' pro.id%}" class="btn btn-info">View<a>
+          
           
          
 
