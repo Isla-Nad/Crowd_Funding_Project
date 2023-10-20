@@ -5,17 +5,28 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
+# class Tag(models.Model):
+#     name = models.CharField(max_length=100,null=True, blank=True)
+
+#     def __str__(self):
+#         return self.name
+
 class Projects(models.Model):
     title = models.CharField(max_length=30,)
     details = models.CharField(max_length=30)
     image = models.ImageField(
         upload_to='projects/images/', max_length=200, null=True)
+    # image2 = models.ImageField(
+    #     upload_to='projects/images/', max_length=200, null=True)
+    # image3 = models.ImageField(
+    #     upload_to='projects/images/', max_length=200, null=True)
     cat = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=True, blank=True)
     total_target = models.DecimalField(
         max_digits=10, decimal_places=2, default=0.0)
     start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(default=timezone.now)
+    # tag = models.ManyToManyField(Tag,null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -28,9 +39,6 @@ class Projects(models.Model):
     def get_show_url(self):
         url = reverse('View', args=[self.id])
         return url
-# class Image(models.Model):
-#     images = models.ImageField(upload_to="projects/images/")
-#     project = models.ForeignKey(Projects, on_delete=models.CASCADE, default=None)
 
 
 class review(models.Model):
@@ -38,3 +46,6 @@ class review(models.Model):
     item = models.ForeignKey(Projects, on_delete=models.CASCADE, null=True)
     review_desp = models.CharField(max_length=100)
     rating = models.IntegerField()
+# class Image(models.Model):
+#     images = models.ImageField(upload_to="projects/images/")
+#     project = models.ForeignKey(Projects, on_delete=models.CASCADE, default=None)
