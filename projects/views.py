@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse
-from projects.forms import Projectsform
+from projects.forms import Projectsform,Dontate
 from projects.models import Projects, review
 from django.contrib.auth.models import User
+
 
 
 def index(request):
@@ -16,19 +17,25 @@ def projects(request):
 def Createform(request):
     form = Projectsform()
 
+
     if request.method == "POST":
         form = Projectsform(request.POST, request.FILES)
+        images = request.FILES.getlist('images')
         if form.is_valid():
             title = form.cleaned_data['title']
             details = form.cleaned_data['details']
-            image = form.cleaned_data['image']
+            image1 = form.cleaned_data['image1']
+            # image2 = form.cleaned_data['image2']
+            # image3= form.cleaned_data['image3']
             total_target = form.cleaned_data['total_target']
             start_time = form.cleaned_data['start_time']
             end_time = form.cleaned_data['end_time']
             product = Projects()
             product.title = title
             product.details = details
-            product.image = image
+            product.image = image1
+            # product.image2 = image2
+            # product.image3 = image3
             product.total_target = total_target
             product.start_time = start_time
             product.end_time = end_time
@@ -69,3 +76,14 @@ def review_page(request, id):
     rating_details = review.objects.filter(item=item_details)
     context = {'reviews': rating_details}
     return render(request, 'projects/addcomment.html', context)
+def Update(request,id):
+    #  filtered_Product=Product.objects.filter(id=id)
+     edited=Projects.objects.get(id=id)
+     form =Dontate(request.POST ,request.FILES,instance=edited)
+     if form.is_valid():
+        total_target=form.cleaned_data['total_target']
+        edited.total_target=total_target
+        edited.save()
+        return redirect("projects")
+
+     return render(request,'projects/donate.html',context={"project":edited,"form":form}) 

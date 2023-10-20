@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% load static%}
-{%block contain%}
+{%block content%}
 
 
 <div class="container" style="padding:50px 0px "> 
@@ -15,6 +15,8 @@
           <p class="card-text">Created at : {{product.created_at}}</p>
           <p class="card-text">Uploaded at : {{product.updated_at}}</p>
           <a href="{% url "projects"%}" class="btn btn-info">Back to projects<a>
+          <a href="{% url 'donate' product.id %}" class="btn btn-primary">Donate</a>
+    
           
           
          

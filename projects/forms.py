@@ -1,12 +1,15 @@
 from django import forms
 from categories.models import Category
+from projects.models import Projects
+from django.forms import ModelForm
 from django.forms.widgets import NumberInput
+# from projects.models import Tag
 
 
-class Projectsform(forms.Form):
+class Projectsform(ModelForm):
     title = forms.CharField(required=True)
     details = forms.CharField(required=True)
-    image = forms.ImageField()
+    # image = forms.ImageField()
     cat = forms.ModelChoiceField(
         Category.objects.all(), label="Category"
     )
@@ -28,7 +31,18 @@ class Projectsform(forms.Form):
                 'class': 'form-control'
             }
         ))
-# class CommentForm(forms.ModelForm):
-#     class Meta:
-#         model = Comment
-#         fields = ['text']
+    # tag = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
+    #                                         widget=forms.SelectMultiple(
+    #     attrs={
+    #         "class": "form-control"
+    #     }
+    # ),required=False)
+    class Meta:
+            model=Projects
+            fields='__all__'
+class Dontate(ModelForm):
+       total_target = forms.DecimalField()
+       class Meta:
+            model=Projects
+            fields= ('total_target',)
+                  

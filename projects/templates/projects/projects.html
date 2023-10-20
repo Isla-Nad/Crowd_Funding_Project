@@ -1,11 +1,16 @@
 {% extends 'layouts/base.html' %} {% load static %} {% block title %}Projects{% endblock %} {% block content %}
 <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet" />
 
+
+
 <a class="btn btn-success" href="{% url 'create' %}">Add new project</a>
-<div class="container" style="padding: 50px 0px">
-  {% for pro in project %}
-  <div class="item card" style="width: 18rem; display: inline-block">
-    <img src="{{ pro.get_image_url }}" width="200" height="200" alt="Project Image" />
+<div class="container">
+
+{%for pro in project%}
+<div class="card" style="width: 18rem;">
+    {% comment %} <img src="{{ images|index:forloop.counter0 }}" alt="project-img" class="img-fluid rounded"
+    style="height: inherit; width: 100%;"> {% endcomment %}
+    <img src="{{pro.get_image_url}}" class="card-img-top" alt="..." width="200" height="200">
     <h5 class="card-title">Title: {{ pro.title }}</h5>
     <p class="card-text">Details: {{ pro.details }}</p>
     <p class="card-text">Category: {{ pro.cat }}</p>
@@ -14,9 +19,9 @@
     <p class="card-text">End time: {{ pro.end_time }}</p>
     <p class="card-text">Created at: {{ pro.created_at }}</p>
     <p class="card-text">Uploaded at: {{ pro.updated_at }}</p>
+    <a href="{% url 'view' pro.id %}" class="btn btn-info">View</a>
+    <a href="{% url 'comment' pro.id %}" class="btn btn-primary">Rating and Comments</a>
   </div>
-  <a href="{% url 'view' pro.id %}" class="btn btn-info">View</a>
-  <a href="{% url 'comment' pro.id %}" class="btn btn-primary">Rating and Comments</a>
   {% endfor %}
 </div>
 {% endblock %}
