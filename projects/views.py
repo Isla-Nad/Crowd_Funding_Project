@@ -34,3 +34,10 @@ def Createform(request):
             product.save()
         return redirect('projects')
     return render(request, 'projects/createforum.html', context={'form': form})
+
+
+
+
+
+def index(request):
+    return render(request,'projects/index.html')

@@ -1,3 +1,140 @@
-{% extends 'layouts/base.html' %} {% load static %} {% block title %}Crowd Funding{% endblock %} {% block content %}
-<section class="hero-section"><img src="{% static "" %}"/></section>
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Crowd Funding{% endblock %} 
+
+
+
+
+{% block content %}
+
+<div>
+    <img src="{% static 'projects/images/hero.jpg' %}" style="width:100%;height:50rem;" alt="">
+</div>
+
+<div class="container">
+    <div class="row">
+        <h2 class = "text-center mt-5"> Here's Our highest 5 rated projects </h2>
+
+        <div class="mt-4" id="slider">
+            <div id="carouselExampleCaptions" class="carousel slide">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="{% static 'projects/images/slider1.jpg' %}" class="d-block w-100" style="height:35rem;" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5>Water Supply Project</h5>
+                      <p>INCREASING ACCESS TO SAFE WATER FOR URBAN AREAS IN AFRICA</p>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="{% static 'projects/images/slider2.jpg' %}" class="d-block w-100" style="height:35rem;" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5>Water Supply Project</h5>
+                      <p>INCREASING ACCESS TO SAFE WATER FOR URBAN AREAS IN AFRICA</p>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="{% static 'projects/images/slider3.jpg' %}" class="d-block w-100" style="height:35rem;" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5>Water Supply Project</h5>
+                      <p>INCREASING ACCESS TO SAFE WATER FOR URBAN AREAS IN AFRICA</p>
+                    </div>
+                  </div>
+                  
+                 
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="container">
+    <div class="row">
+        <h2 class = "text-center mt-5"> Our latest projects </h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+              <div class="card">
+                <img src="{% static 'projects/images/slider3.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Card title</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img src="{% static 'projects/images/slider3.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Card title</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img src="{% static 'projects/images/slider3.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Card title</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img src="{% static 'projects/images/slider3.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Card title</h5>
+                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                  <img src="{% static 'projects/images/slider3.jpg' %}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card">
+                  <img src="{% static 'projects/images/slider3.jpg' %}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+    </div>
+</div>
+<div class="container mb-5">
+    <div class="row">
+        <h2 class = "text-center mt-5 mb-4"> Also you can find projects at </h2>
+        <div class="text-center">
+            <a type="button" class="col-2 btn btn-outline-secondary">Category 1</a>
+            <a type="button" class="col-2 btn btn-outline-secondary">Category 2</a>
+            <a type="button" class="col-2 btn btn-outline-secondary">Category 3</a>
+            <a type="button" class="col-2 btn btn-outline-secondary">Category 4</a>
+            <a type="button" class="col-2 btn btn-outline-secondary">Category 5</a>
+            
+          </div>
+    </div>
+</div>
+    
+
+
+        
 {% endblock%}
