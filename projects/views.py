@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
-from projects.forms import Projectsform,Dontate
+from projects.forms import Projectsform, Dontate
 from projects.models import Projects, review
 from django.contrib.auth.models import User
-
 
 
 def index(request):
@@ -17,14 +16,13 @@ def projects(request):
 def Createform(request):
     form = Projectsform()
 
-
     if request.method == "POST":
         form = Projectsform(request.POST, request.FILES)
         images = request.FILES.getlist('images')
         if form.is_valid():
             title = form.cleaned_data['title']
             details = form.cleaned_data['details']
-            image1 = form.cleaned_data['image1']
+            image1 = form.cleaned_data['image']
             # image2 = form.cleaned_data['image2']
             # image3= form.cleaned_data['image3']
             total_target = form.cleaned_data['total_target']
@@ -76,14 +74,16 @@ def review_page(request, id):
     rating_details = review.objects.filter(item=item_details)
     context = {'reviews': rating_details}
     return render(request, 'projects/addcomment.html', context)
-def Update(request,id):
+
+
+def Update(request, id):
     #  filtered_Product=Product.objects.filter(id=id)
-     edited=Projects.objects.get(id=id)
-     form =Dontate(request.POST ,request.FILES,instance=edited)
-     if form.is_valid():
-        total_target=form.cleaned_data['total_target']
-        edited.total_target=total_target
+    edited = Projects.objects.get(id=id)
+    form = Dontate(request.POST, request.FILES, instance=edited)
+    if form.is_valid():
+        total_target = form.cleaned_data['total_target']
+        edited.total_target = total_target
         edited.save()
         return redirect("projects")
 
-     return render(request,'projects/donate.html',context={"project":edited,"form":form}) 
+    return render(request, 'projects/donate.html', context={"project": edited, "form": form})
