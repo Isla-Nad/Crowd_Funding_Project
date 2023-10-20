@@ -1,18 +1,16 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate, login
-from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
+from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_str, force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from django.utils.html import strip_tags
 from accounts.forms import AccountCreationForm, UserProfileForm, UserChangeForm
 from accounts.models import UserProfile
 
@@ -72,9 +70,16 @@ def user_login(request):
             else:
                 return render(request, 'accounts/inactive_user.html')
         else:
-            return render(request, 'accounts/login_failure.html')
+            messages.error(
+                request, 'Your username or password is incorrect. Please try again.')
+            return render(request, 'accounts/login.html')
     else:
         return render(request, 'accounts/login.html')
+
+
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('index'))
 
 
 def profile(request, pk):

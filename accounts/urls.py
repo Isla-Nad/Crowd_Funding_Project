@@ -1,5 +1,5 @@
 from django.urls import include, path
-from accounts.views import activate, delete_account, edit_profile, edit_user, profile, register, user_login
+from accounts.views import activate, delete_account, edit_profile, edit_user, profile, register, user_login, user_logout
 
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),
@@ -7,6 +7,7 @@ urlpatterns = [
     path('register/activate/<str:uidb64>/<str:token>/',
          activate, name='accounts.activate'),
     path('user_login/', user_login, name='accounts.login'),
+    path('user_logout/', user_logout, name='accounts.logout'),
     path('profile/<int:pk>', profile, name='accounts.profile'),
     path('edit/', edit_user, name='accounts.edit'),
     path('edit/profile/<int:pk>', edit_profile, name='profile.edit'),
