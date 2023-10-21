@@ -95,6 +95,18 @@ def project_detail(request, id):
 
 from projects.forms import ProjectReportForm
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
+
+def send_report_notification(report):
+    subject = f"New Report from {report.user} for Project: {report.project.title}"
+    message = f'''A new report has been submitted for the project: {report.project}
+                for reason {report.reason}
+                and detials {report.description}.'''  
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = ['kadem73980@tutoreve.com',]  # List of admin email addresses
+
+    send_mail(subject, message, from_email, recipient_list,fail_silently=False)
 
 @login_required
 def add_report(request, id):
@@ -107,7 +119,8 @@ def add_report(request, id):
             report = form.save(commit=False)  
             report.project = project 
             report.user = request.user
-            report.save()  
+            report.save() 
+            send_report_notification(report)
             return redirect('projects') 
     else:
         form = ProjectReportForm()
