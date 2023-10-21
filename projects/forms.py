@@ -71,3 +71,15 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['rating', 'review_desp']
+
+
+###### ! Roport porject 
+##! import report related 
+from projects.models import Report 
+
+
+class ProjectReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['reason','description']
+

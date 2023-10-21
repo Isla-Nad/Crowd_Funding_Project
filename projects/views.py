@@ -91,3 +91,26 @@ def project_detail(request, id):
         'donation_form': donation_form,
         'total_donations': total_donations,
     })
+
+
+from projects.forms import ProjectReportForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def add_report(request, id):
+    project = Project.objects.get(id=id)
+    
+    if request.method == 'POST':
+        # Create the report form instance with data from the request
+        form = ProjectReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)  
+            report.project = project 
+            report.user = request.user
+            report.save()  
+            return redirect('projects') 
+    else:
+        form = ProjectReportForm()
+    
+    context = {'reportform': form, 'project': project}
+    return render(request, 'report/addreport.html', context)
