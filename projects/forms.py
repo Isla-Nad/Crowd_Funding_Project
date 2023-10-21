@@ -1,17 +1,34 @@
 from django import forms
-from categories.models import Category
-from projects.models import Projects
+from categories.models import Category, Tag
+from projects.models import Donation, Project, Review
 from django.forms import ModelForm
 from django.forms.widgets import NumberInput
-# from projects.models import Tag
 
 
-class Projectsform(ModelForm):
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
+
+
+class ProjectForm(ModelForm):
     title = forms.CharField(required=True)
     details = forms.CharField(required=True)
-    # image = forms.ImageField()
-    cat = forms.ModelChoiceField(
-        Category.objects.all(), label="Category"
+    category = forms.ModelChoiceField(
+        Category.objects.all(),
+        label="Category"
     )
     total_target = forms.DecimalField()
     start_time = forms.DateTimeField(
@@ -22,7 +39,6 @@ class Projectsform(ModelForm):
                 'class': 'form-control'
             }
         ))
-
     end_time = forms.DateTimeField(
         widget=NumberInput(
             attrs={
@@ -31,18 +47,27 @@ class Projectsform(ModelForm):
                 'class': 'form-control'
             }
         ))
-    # tag = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
-    #                                         widget=forms.SelectMultiple(
-    #     attrs={
-    #         "class": "form-control"
-    #     }
-    # ),required=False)
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    images = MultipleFileField()
+
     class Meta:
-            model=Projects
-            fields='__all__'
-class Dontate(ModelForm):
-       total_target = forms.DecimalField()
-       class Meta:
-            model=Projects
-            fields= ('total_target',)
-                  
+        model = Project
+        fields = ['title', 'details',  'category', 'total_target',
+                  'start_time', 'end_time', 'tags', 'images', ]
+
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = ['donation_amount']
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'review_desp']

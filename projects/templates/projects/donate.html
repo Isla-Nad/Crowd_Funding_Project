@@ -1,12 +1,9 @@
-{% extends "layouts/base.html" %}
-{% load static%}
-{%block content%}
+{% extends "layouts/base.html" %} {% load static%} {%block content%}
 <h1>Enter you update donate</h1>
-<div class="container" style="padding:50px 0px">
-<form action="" method="POST" enctype="multipart/form-data">
-    {%csrf_token%}
-    {{ form.as_p }}
-    <input type="submit" value="Update" class="btn btn-primary">
-    <div>
-        
-{%endblock%}
+<div class="container" style="padding: 50px 0px">
+  <form action="" method="POST" enctype="multipart/form-data">
+    {%csrf_token%} {{ form.as_p }}
+    <input type="submit" value="Update" class="btn btn-primary" />
+    <div>{%endblock%}</div>
+  </form>
+</div>

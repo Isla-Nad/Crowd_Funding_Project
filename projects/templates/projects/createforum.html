@@ -2,7 +2,7 @@
 <div class="container" style="padding: 50px 0px">
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %} {{ form }}
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Create Project</button>
   </form>
   <div>
     <script src="{% static 'projects/js/script.js'%}"></script>

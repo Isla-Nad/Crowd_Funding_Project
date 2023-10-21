@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect, HttpResponse
-from projects.forms import Projectsform, Dontate
-from projects.models import Projects, review
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
+from django.db.models import Sum
+from projects.forms import DonationForm, ProjectForm,  ReviewForm
+from projects.models import Donation, ProjectImage, Project, Review
 from django.contrib.auth.models import User
 
 
@@ -8,82 +10,84 @@ def index(request):
     return render(request, 'projects/index.html')
 
 
-def projects(request):
-    pro = Projects.objects.all()
-    return render(request, 'projects/projects.html', context={"project": pro})
+def project_list(request):
+    projects = Project.objects.all()
+    first_images = []
+
+    for project in projects:
+        first_image = ProjectImage.objects.filter(project=project).first()
+        first_images.append(first_image)
+
+    return render(request, 'projects/projects.html', context={'projects': projects, 'first_images': first_images, })
 
 
 def Createform(request):
-    form = Projectsform()
-
+    form = ProjectForm()
     if request.method == "POST":
-        form = Projectsform(request.POST, request.FILES)
-        images = request.FILES.getlist('images')
+        form = ProjectForm(request.POST, request.FILES)
+
         if form.is_valid():
+            user = request.user
             title = form.cleaned_data['title']
             details = form.cleaned_data['details']
-            image1 = form.cleaned_data['image']
-            # image2 = form.cleaned_data['image2']
-            # image3= form.cleaned_data['image3']
+            category = form.cleaned_data['category']
             total_target = form.cleaned_data['total_target']
             start_time = form.cleaned_data['start_time']
             end_time = form.cleaned_data['end_time']
-            product = Projects()
-            product.title = title
-            product.details = details
-            product.image = image1
-            # product.image2 = image2
-            # product.image3 = image3
-            product.total_target = total_target
-            product.start_time = start_time
-            product.end_time = end_time
-            product.save()
-        return redirect('projects')
+            project = Project(user=user, title=title, details=details, total_target=total_target, category=category,
+                              start_time=start_time, end_time=end_time)
+            project.save()
+            tags = form.cleaned_data['tags']
+            project.tags.set(tags)
+            images = request.FILES.getlist('images')
+            for image in images:
+                project_image = ProjectImage(project=project, image=image)
+                project_image.save()
+            print(project)
+
+            return redirect('projects')
+
     return render(request, 'projects/createforum.html', context={'form': form})
 
 
-def View(request, id):
-    # filtered_Product= filter(lambda pro: pro['id'] == id, Product)
-    filtered_Product = Projects.objects.filter(id=id)
-    print(filtered_Product)
-    filtered_Product = list(filtered_Product)
-    print(filtered_Product)
-    if filtered_Product:
-        print(filtered_Product[0])
-        return render(request, 'projects/view.html', context={"product": filtered_Product[0]})
+def project_detail(request, id):
+    project = get_object_or_404(Project, id=id)
+    images = ProjectImage.objects.filter(project_id=id)
+    reviews = Review.objects.filter(project_id=id)
+    donations = Donation.objects.filter(project_id=id)
 
-    return HttpResponse("No such student Student ")
-
-
-def review_page(request, id):
-
-    item_details = Projects.objects.get(id=id)
+    total_donations = donations.aggregate(Sum('donation_amount'))[
+        'donation_amount__sum'] or 0
 
     if request.method == 'POST':
-        star_rating = request.POST.get('rating')
-        item_review = request.POST.get('item_review')
+        if 'donate' in request.POST:
+            donation_form = DonationForm(request.POST)
+            if donation_form.is_valid():
+                donation_amount = donation_form.cleaned_data['donation_amount']
+                if total_donations + donation_amount <= project.total_target:
+                    donation = donation_form.save(commit=False)
+                    donation.user = request.user
+                    donation.project = project
+                    donation.save()
+                return redirect(reverse('view', args=[id]))
 
-        item_reviews = review(
-            item=item_details, rating=star_rating, review_desp=item_review)
-        item_reviews.save()
+        else:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                new_review = form.save(commit=False)
+                new_review.user = request.user
+                new_review.project = project
+                new_review.save()
+                return redirect(reverse('view', args=[id]))
+    else:
+        form = ReviewForm()
+        donation_form = DonationForm()
 
-        rating_details = review.objects.filter(item=item_details)
-        context = {'reviews': rating_details}
-        return render(request, 'projects/addcomment.html', context)
-
-    rating_details = review.objects.filter(item=item_details)
-    context = {'reviews': rating_details}
-    return render(request, 'projects/addcomment.html', context)
-
-
-def Update(request, id):
-    #  filtered_Product=Product.objects.filter(id=id)
-    edited = Projects.objects.get(id=id)
-    form = Dontate(request.POST, request.FILES, instance=edited)
-    if form.is_valid():
-        total_target = form.cleaned_data['total_target']
-        edited.total_target = total_target
-        edited.save()
-        return redirect("projects")
-
-    return render(request, 'projects/donate.html', context={"project": edited, "form": form})
+    return render(request, 'projects/view.html', {
+        'project': project,
+        'images': images,
+        'reviews': reviews,
+        'form': form,
+        'donation_form': donation_form,
+        'total_donations': total_donations,
+    })

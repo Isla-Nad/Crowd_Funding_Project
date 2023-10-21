@@ -1,27 +1,17 @@
 {% extends 'layouts/base.html' %} {% load static %} {% block title %}Projects{% endblock %} {% block content %}
-<link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet" />
-
-
-
-<a class="btn btn-success" href="{% url 'create' %}">Add new project</a>
-<div class="container">
-
-{%for pro in project%}
-<div class="card" style="width: 18rem;">
-    {% comment %} <img src="{{ images|index:forloop.counter0 }}" alt="project-img" class="img-fluid rounded"
-    style="height: inherit; width: 100%;"> {% endcomment %}
-    <img src="{{pro.get_image_url}}" class="card-img-top" alt="..." width="200" height="200">
-    <h5 class="card-title">Title: {{ pro.title }}</h5>
-    <p class="card-text">Details: {{ pro.details }}</p>
-    <p class="card-text">Category: {{ pro.cat }}</p>
-    <p class="card-text">Total Target: {{ pro.total_target }}</p>
-    <p class="card-text">Start time: {{ pro.start_time }}</p>
-    <p class="card-text">End time: {{ pro.end_time }}</p>
-    <p class="card-text">Created at: {{ pro.created_at }}</p>
-    <p class="card-text">Uploaded at: {{ pro.updated_at }}</p>
-    <a href="{% url 'view' pro.id %}" class="btn btn-info">View</a>
-    <a href="{% url 'comment' pro.id %}" class="btn btn-primary">Rating and Comments</a>
+<a href="{% url 'create' %}" class="btn btn-success my-2 m-auto d-block w-25"> Create New project </a>
+<div class="row gap-5 container m-auto my-3">
+  {% for pro in projects %}
+  <div class="card" style="width: 18rem">
+    {% for image in first_images %} {% if image.project_id == pro.id %}
+    <img src="{{ image.image.url }}" class="card-img-top w-100 h-100" alt="..." />
+    {% endif %} {% endfor %}
+    <div class="card-body">
+      <h5 class="card-title">{{pro.title}}</h5>
+      <a href="{% url 'view' pro.id %}" class="btn btn-primary">Details</a>
+      {% comment %} <a href="{% url 'products.edit' pro.id %}" class="btn btn-warning">Edit</a> {% endcomment %} {% comment %} <a href="{% url 'products.delete' pro.id %}" class="btn btn-danger">Delete</a> {% endcomment %}
+    </div>
   </div>
   {% endfor %}
 </div>
-{% endblock %}
+{% endblock%}

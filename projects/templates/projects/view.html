@@ -1,31 +1,196 @@
-{% extends "layouts/base.html" %}
-{% load static%}
-{%block content%}
+{% extends 'layouts/base.html' %} {% load static %} {% block title %} {{ project.title }} {% endblock %} {% block content %}
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
-<div class="container" style="padding:50px 0px "> 
-    <div class="iteeem card " style="width: 18rem; display:inline-block " >
-        <img src="{{product.get_image_url}}" width="200" height="200"> 
-          <h5 class="card-title" >Title : {{product.title}}</h5>
-          <p class="card-text">Details : {{product.details}}</p>
-          <p class="card-text">Category : {{product.cat}}</p>
-          <p class="card-text">Total Target : {{product.total_target}}</p>
-          <p class="card-text">Start time : {{product.start_time}}</p>
-          <p class="card-text">End time : {{product.end_time}}</p>
-          <p class="card-text">Created at : {{product.created_at}}</p>
-          <p class="card-text">Uploaded at : {{product.updated_at}}</p>
-          <a href="{% url "projects"%}" class="btn btn-info">Back to projects<a>
-          <a href="{% url 'donate' product.id %}" class="btn btn-primary">Donate</a>
-    
-          
-          
-         
+<style>
+  .checked {
+    color: orange;
+  }
+  .rating {
+    margin-top: 40px;
+    border: none;
+    float: left;
+  }
 
+  .rating > label {
+    color: #9c9c9c;
+    font-size: 7px;
+    float: right;
+  }
 
-          
-    
-    </div>  
-    {%endblock%}
-        
-        
- 
+  .rating > label:before {
+    margin: 5px;
+    font-size: 2em;
+    font-family: FontAwesome;
+    content: "\f005";
+    display: inline-block;
+  }
+
+  .rating > input {
+    display: none;
+  }
+
+  .rating > input:checked ~ label,
+  .rating:not(:checked) > label:hover,
+  .rating:not(:checked) > label:hover ~ label {
+    color: #f79426;
+  }
+
+  .rating > input:checked + label:hover,
+  .rating > input:checked ~ label:hover,
+  .rating > label:hover ~ input:checked ~ label,
+  .rating > input:checked ~ label:hover ~ label {
+    color: #fece31;
+  }
+
+  #star {
+    font-size: 10px;
+    color: grey;
+  }
+
+  #check-star {
+    font-size: 10px;
+  }
+</style>
+<h1 class="text-center">{{ project.title }}</h1>
+
+<div class="container">
+  <div class="row">
+    <div class="mt-4" id="slider">
+      <div id="carouselExampleCaptions" class="carousel slide">
+        <div class="carousel-inner">
+          {% for image in images %}
+          <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+            <img src=" {{ image.image.url }} " class="d-block w-100" style="height: 35rem" alt="..." />
+          </div>
+          {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<hr style="border: dashed" />
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Description</th>
+            <td>{{ project.details }}</td>
+          </tr>
+          <tr>
+            <th>Total Target</th>
+            <td>${{ project.total_target }}</td>
+          </tr>
+          <tr>
+            <th>Start Time</th>
+            <td>{{ project.start_time }}</td>
+          </tr>
+          <tr>
+            <th>End Time</th>
+            <td>{{ project.end_time }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-6">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Category</th>
+            <td>{{ project.category.name }}</td>
+          </tr>
+          <tr>
+            <th>Tags</th>
+            <td>
+              <ul>
+                {% for tag in project.tags.all %}
+                <li>{{ tag.name }}</li>
+                {% endfor %}
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<hr style="border: dashed" />
+
+<div class="container">
+  <h3>All ratings and reviews</h3>
+  {% for review in reviews %}
+  <p>{{ review.user.username }}</p>
+  <p>{{ review.review_desp }}</p>
+  {% if review.rating > 0 %}
+  <i class="fa fa-star {% if review.rating < 1 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+  <i class="fa fa-star {% if review.rating < 2 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+  <i class="fa fa-star {% if review.rating < 3 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+  <i class="fa fa-star {% if review.rating < 4 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+  <i class="fa fa-star {% if review.rating < 5 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+  <hr />
+  {% else %}
+  <i class="fa fa-star" id="star"></i>
+  <i class="fa fa-star" id="star"></i>
+  <i class="fa fa-star" id="star"></i>
+  <i class="fa fa-star" id="star"></i>
+  <i class="fa fa-star" id="star"></i>
+  &nbsp;<span>No ratings</span>
+  <hr />
+  {% endif %} {% endfor %}
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="col-md-6">
+      <div class="form-group required">
+        <div class="rating">
+          <input type="radio" id="star5" name="rating" value="5" />
+          <label class="star" for="star5" title="Awesome" aria-hidden="true"></label>
+          <input type="radio" id="star4" name="rating" value="4" />
+          <label class="star" for="star4" title="Great" aria-hidden="true"></label>
+          <input type="radio" id="star3" name="rating" value="3" />
+          <label class="star" for="star3" title="Very good" aria-hidden="true"></label>
+          <input type="radio" id="star2" name="rating" value="2" />
+          <label class="star" for="star2" title="Good" aria-hidden="true"></label>
+          <input type="radio" id="star1" name="rating" value="1" />
+          <label class="star" for="star1" title="Bad" aria-hidden="true"></label>
+        </div>
+      </div>
+      <textarea name="review_desp" placeholder="Write a review" rows="6" cols="50" id="review-text" required></textarea>
+      <br />
+      <div class="row">
+        <div class="col-md-4">
+          <input type="submit" class="btn btn-primary mt-2" value="Post" />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<hr style="border: dashed" />
+
+<div class="container">
+  <h2>Total Donations: ${{ total_donations }}</h2>
+  <h2>Progress Toward Target: ${{ total_donations }} / ${{ project.total_target }}</h2>
+  <hr />
+  <form method="post">
+    {% csrf_token %}
+    <div class="col-md-6">
+      <div class="form-group required">
+        <label for="donation">Donate:</label>
+        {{ donation_form }}
+      </div>
+      <input type="submit" name="donate" class="btn btn-primary mt-2" value="Donate" />
+    </div>
+  </form>
+</div>
+<script src="{% static 'projects/js/script.js' %}"></script>
+{% endblock %}
