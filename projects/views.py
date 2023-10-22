@@ -94,6 +94,15 @@ def project_detail(request, id):
         'donation_form': donation_form,
         'total_donations': total_donations,
     })
+# def delete_project(request, id):
+#     return render(request, 'projects/delete_project.html')
+def delete_project(request, id):
+    project = get_object_or_404(Project, id=id)
+    project.delete()
+    url = reverse('products.list')
+    return redirect(url)  #redirect functions to redirect to the same page
+
+
 
 
 def send_report_notification(report):

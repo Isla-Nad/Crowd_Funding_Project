@@ -67,6 +67,8 @@
             <div class="card-body">
               <h5 class="card-title">{{pro.title}}</h5>
               <a href="{% url 'view' pro.id %}" class="btn btn-primary">Details</a>
+              <p style="color :green">target: ${{pro.total_target}}</p>
+              </p>
               {% comment %} <a href="{% url 'products.edit' pro.id %}" class="btn btn-warning">Edit</a> {% endcomment %} {% comment %} <a href="{% url 'products.delete' pro.id %}" class="btn btn-danger">Delete</a> {% endcomment %}
             </div>
           </div>
