@@ -7,5 +7,6 @@ admin.site.register(Project)
 
 
 #!
-from projects.models import Report
+from projects.models import Report,ReportComment
 admin.site.register(Report)
+admin.site.register(ReportComment)

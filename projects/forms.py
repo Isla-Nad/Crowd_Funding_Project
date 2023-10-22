@@ -75,11 +75,22 @@ class ReviewForm(forms.ModelForm):
 
 ###### ! Roport porject 
 ##! import report related 
-from projects.models import Report 
+from projects.models import Report ,ReportComment
 
 
 class ProjectReportForm(forms.ModelForm):
     class Meta:
         model = Report
+        fields = ['reason','description']
+
+class ProjectReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['reason','description']
+
+#! Report comment 
+class CommentReportForm(forms.ModelForm):
+    class Meta:
+        model = ReportComment
         fields = ['reason','description']
 

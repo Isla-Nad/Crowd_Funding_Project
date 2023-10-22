@@ -146,7 +146,9 @@
   <i class="fa fa-star" id="star"></i>
   &nbsp;<span>No ratings</span>
   <hr />
-  {% endif %} {% endfor %}
+  {% endif %} 
+  <a class='btn' href={% url "comment.report" review.id %}>Report comment</a>
+  {% endfor %}
 
   <form method="post">
     {% csrf_token %}

@@ -51,7 +51,7 @@ class Donation(models.Model):
 
 
 
-##!
+##! Reporting the project 
 
 class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
@@ -61,3 +61,14 @@ class Report(models.Model):
 
     def __str__(self) -> str:
         return self.project.title
+
+#! Reporting the comment 
+
+class ReportComment(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,default='')
+    review = models.ForeignKey(Review,on_delete=models.CASCADE)
+    reason = models.CharField(max_length=100)
+    description = models.TextField()
+
+    def __str__(self) -> str:
+        return self.review.review_desp

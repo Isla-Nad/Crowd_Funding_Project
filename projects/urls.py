@@ -10,8 +10,9 @@ urlpatterns = [
 
 ## ! 
 
-from projects.views import add_report
+from projects.views import add_report,report_comment_view
 
 urlpatterns+= [
-    path('report/<id>',add_report,name='project.report')
+    path('report/<id>',add_report,name='project.report'),
+    path('reportcomment/<id>',report_comment_view,name='comment.report'),
 ]
