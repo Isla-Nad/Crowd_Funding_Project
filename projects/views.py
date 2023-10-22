@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.db.models import Sum
 from projects.forms import DonationForm, ProjectForm,  ReviewForm
 from projects.models import Donation, ProjectImage, Project, Review
-from django.contrib.auth.models import User
 
 
 def index(request):

@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from accounts.forms import AccountCreationForm, UserProfileForm, UserChangeForm
 from accounts.models import UserProfile
+from projects.models import Donation, Project, ProjectImage
 
 
 def register(request):
@@ -85,9 +86,28 @@ def user_logout(request):
 def profile(request, pk):
     user = User.objects.get(pk=pk)
     user_profile = UserProfile.objects.get(user=user)
+    projects = Project.objects.filter(user=user)
+    donations = Donation.objects.filter(user=user)
+    first_images = []
+
+    for project in projects:
+        first_image = ProjectImage.objects.filter(project=project).first()
+        first_images.append(first_image)
+
+    project_with_first_images = []
+
+    for donation in donations:
+        project = donation.project
+        first_image = ProjectImage.objects.filter(project=project).first()
+        project_with_first_images.append((project, first_image, donation))
+
     context = {
         'user': user,
         'user_profile': user_profile,
+        'projects': projects,
+        'donations': donations,
+        'first_images': first_images,
+        'project_with_first_images': project_with_first_images,
     }
     return render(request, 'accounts/profile.html', context)
 
