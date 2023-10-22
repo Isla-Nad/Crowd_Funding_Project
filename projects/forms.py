@@ -83,11 +83,6 @@ class ProjectReportForm(forms.ModelForm):
         model = Report
         fields = ['reason','description']
 
-class ProjectReportForm(forms.ModelForm):
-    class Meta:
-        model = Report
-        fields = ['reason','description']
-
 #! Report comment 
 class CommentReportForm(forms.ModelForm):
     class Meta:
