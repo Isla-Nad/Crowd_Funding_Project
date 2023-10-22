@@ -1,3 +1,7 @@
+from django.conf import settings
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from projects.forms import ProjectReportForm
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.db.models import Sum
@@ -92,37 +96,37 @@ def project_detail(request, id):
     })
 
 
-from projects.forms import ProjectReportForm
-from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.conf import settings
-
 def send_report_notification(report):
     subject = f"New Report from {report.user} for Project: {report.project.title}"
     message = f'''A new report has been submitted for the project: {report.project}
                 for reason {report.reason}
-                and detials {report.description}.'''  
+                and detials {report.description}.'''
     from_email = settings.EMAIL_HOST_USER
-    recipient_list = ['kadem73980@tutoreve.com',]  # List of admin email addresses
+    # from_email = 'islamnady95@hotmail.com'
+    # List of admin email addresses
+    recipient_list = ['kadem73980@tutoreve.com',]
+    # recipient_list = ['islamnady95@gmail.com',]
 
-    send_mail(subject, message, from_email, recipient_list,fail_silently=False)
+    send_mail(subject, message, from_email,
+              recipient_list, fail_silently=False)
+
 
 @login_required
 def add_report(request, id):
     project = Project.objects.get(id=id)
-    
+
     if request.method == 'POST':
         # Create the report form instance with data from the request
         form = ProjectReportForm(request.POST)
         if form.is_valid():
-            report = form.save(commit=False)  
-            report.project = project 
+            report = form.save(commit=False)
+            report.project = project
             report.user = request.user
-            report.save() 
+            report.save()
             send_report_notification(report)
-            return redirect('projects') 
+            return redirect('projects')
     else:
         form = ProjectReportForm()
-    
+
     context = {'reportform': form, 'project': project}
     return render(request, 'report/addreport.html', context)

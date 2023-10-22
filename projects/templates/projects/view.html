@@ -187,11 +187,13 @@
       <div class="form-group required">
         <label for="donation">Donate:</label>
         {{ donation_form }}
-        <a class='btn btn-danger' href={% url "project.report" project.id %}>Report this Project </a>
       </div>
       <input type="submit" name="donate" class="btn btn-primary mt-2" value="Donate" />
     </div>
   </form>
 </div>
+<hr style="border: dashed" />
+<a class="btn btn-danger" href="{% url 'project.report' project.id %}">Report this Project</a>
+
 <script src="{% static 'projects/js/script.js' %}"></script>
 {% endblock %}
