@@ -1,7 +1,13 @@
-{% extends 'layouts/base.html' %}
-{%block title %} confirm delete {%endblock%}
+{% extends 'layouts/base.html' %}{% load static %} {% block title %} Confirm Delete {% endblock %} {% block content %}
+<div class="container my-4">
+  <h2>Confirm Deletion</h2>
+  <p>Are you sure you want to delete your project?</p>
+  <form method="post" class="mb-4">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-danger">Delete</button>
+  </form>
+  <a class="btn btn-outline-primary" href="{% url 'projects.list' %}">Cancel</a>
+</div>
 
-{% block content %}
-<h2>Confirm Deletion</h2>
-<p>Are you sure you want to delete your account?</p>
-{%endblock%}
+<script src="{% static 'projects/js/script.js' %}"></script>
+{% endblock %}

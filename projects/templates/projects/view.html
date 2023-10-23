@@ -53,8 +53,6 @@
   }
 </style>
 <h1 class="text-center">{{ project.title }}</h1>
-<h1 class="text-center">created by: {{ project.user }}</h1>
-<h1 class="text-center">logged now: {{ user.username }}</h1>
 
 <div class="container">
   <div class="row">
@@ -80,6 +78,7 @@
   </div>
 </div>
 <hr style="border: dashed" />
+
 <div class="container">
   <div class="row">
     <div class="col-md-6">
@@ -100,6 +99,10 @@
           <tr>
             <th>End Time</th>
             <td>{{ project.end_time }}</td>
+          </tr>
+          <tr>
+            <th>Created by</th>
+            <td>{{ project.user }}</td>
           </tr>
         </tbody>
       </table>
@@ -195,15 +198,22 @@
   </form>
 </div>
 <hr style="border: dashed" />
-<a class="btn btn-danger" href="{% url 'project.report' project.id %}">Report this Project</a>
-{%if user == project.user%}
-  <a class="btn btn-danger" href="{% url 'delete' project.id %}">delete Project</a>
-  {%else%}
-  <p>hello</p>
-{%endif%}
-<p>total_donation: {{total_donations}}</p>
-<p>total target: {{project.total_target}}</p>
-<p>username  is: {{ request.user.username }}</p>
-<p>createdis: {{project.user}}</p>
+
+<div class="container d-flex justify-content-around my-3">
+  <a class="btn btn-outline-danger" href="{% url 'project.report' project.id %}">Report this Project</a>
+  <a class="btn btn-outline-danger" href="{% url 'project.delete' project.id %}">delete Project</a>
+</div>
+<div class="container d-flex justify-content-end">
+  {% if messages %}
+  <div class="messages">
+    <ul class="errorlist">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endif %}
 <script src="{% static 'projects/js/script.js' %}"></script>
 {% endblock %}

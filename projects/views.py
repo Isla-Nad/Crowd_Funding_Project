@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from projects.forms import ProjectReportForm
 from django.shortcuts import get_object_or_404, render, redirect
@@ -24,6 +25,7 @@ def project_list(request):
     return render(request, 'projects/projects.html', context={'projects': projects, 'first_images': first_images, })
 
 
+@login_required
 def Createform(request):
     form = ProjectForm()
     if request.method == "POST":
@@ -46,9 +48,8 @@ def Createform(request):
             for image in images:
                 project_image = ProjectImage(project=project, image=image)
                 project_image.save()
-            print(project)
 
-            return redirect('projects')
+            return redirect('projects.list')
 
     return render(request, 'projects/createforum.html', context={'form': form})
 
@@ -72,7 +73,7 @@ def project_detail(request, id):
                     donation.user = request.user
                     donation.project = project
                     donation.save()
-                return redirect(reverse('view', args=[id]))
+                return redirect(reverse('project.view', args=[id]))
 
         else:
             form = ReviewForm(request.POST)
@@ -81,7 +82,7 @@ def project_detail(request, id):
                 new_review.user = request.user
                 new_review.project = project
                 new_review.save()
-                return redirect(reverse('view', args=[id]))
+                return redirect(reverse('project.view', args=[id]))
     else:
         form = ReviewForm()
         donation_form = DonationForm()
@@ -94,17 +95,32 @@ def project_detail(request, id):
         'donation_form': donation_form,
         'total_donations': total_donations,
     })
-# def delete_project(request, id):
-#     return render(request, 'projects/delete_project.html')
+
+
+@login_required
 def delete_project(request, id):
     project = get_object_or_404(Project, id=id)
-    project.delete()
-    url = reverse('products.list')
-    return redirect(url)  #redirect functions to redirect to the same page
+
+    if project.user == request.user:
+        donations = Donation.objects.filter(project=project)
+        total_donations = donations.aggregate(Sum('donation_amount'))[
+            'donation_amount__sum'] or 0
+        if total_donations < 0.25 * float(project.total_target):
+            if request.method == 'POST':
+                project.delete()
+                return redirect(reverse('projects.list'))
+            return render(request, 'projects/delete_project.html')
+        else:
+            messages.error(
+                request, "You cannot delete this project as total donations exceed 25% of the target.")
+            return redirect(reverse('project.view', args=[id]))
+    else:
+        messages.error(
+            request, "Permission denied: You are not the creator of this project.")
+        return redirect(reverse('project.view', args=[id]))
 
 
-
-
+@login_required
 def send_report_notification(report):
     subject = f"New Report from {report.user} for Project: {report.project.title}"
     message = f'''A new report has been submitted for the project: {report.project}
