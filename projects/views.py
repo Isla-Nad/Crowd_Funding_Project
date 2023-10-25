@@ -155,7 +155,7 @@ def add_report(request, id):
             report.user = request.user
             report.save()
             send_report_notification(report)
-            return redirect('projects')
+            return redirect('projects.list')
     else:
         form = ProjectReportForm()
 
@@ -164,7 +164,7 @@ def add_report(request, id):
 
 #! Report comment view
 
-def send_report_notification(report):
+def send_report_notification_comment(report):
     subject = f"New Report from {report.user} for user's comment: {report.review.user}"
     message = f'''A new report has been submitted for the Comment: {report.review.review_desp}
                 for reason {report.reason}
@@ -187,8 +187,8 @@ def report_comment_view(request, id):
             report.user = request.user 
             report.review = review
             report.save()
-            send_report_notification(report)
-            return redirect('projects')
+            send_report_notification_comment(report)
+            return redirect('projects.list')
     else:
         form = CommentReportForm()
 

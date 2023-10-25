@@ -41,7 +41,8 @@ class Review(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     review_desp = models.CharField(max_length=100)
     rating = models.IntegerField()
-
+    def __str__(self) -> str:
+        return self.review_desp
 
 class Donation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
