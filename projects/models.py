@@ -16,11 +16,17 @@ class Project(models.Model):
     start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(default=timezone.now)
     tags = models.ManyToManyField(Tag, blank=True)
+    cover = models.ImageField(
+        upload_to='projects/images/', max_length=200, null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
 
     def __str__(self):
         return f"{self.title}"
+    
+    def get_image_url(self):
+        return f'/media/{self.cover}'
 
     def get_show_url(self):
         url = reverse('View', args=[self.id])
@@ -41,6 +47,11 @@ class Review(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     review_desp = models.CharField(max_length=100)
     rating = models.IntegerField()
+    
+    # def get_project_rating(self):
+        
+    #     pass
+        
 
 
 class Donation(models.Model):
@@ -48,3 +59,5 @@ class Donation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     donation_amount = models.DecimalField(max_digits=10, decimal_places=2)
     donation_date = models.DateTimeField(auto_now_add=True)
+
+

@@ -1,13 +1,50 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.db.models import Sum
-from projects.forms import DonationForm, ProjectForm,  ReviewForm
+from projects.forms import DonationForm, ProjectForm,  ReviewForm 
 from projects.models import Donation, ProjectImage, Project, Review
 from django.contrib.auth.models import User
 
 
 def index(request):
-    return render(request, 'projects/index.html')
+    allProjects = Project.objects.all()
+    allReviews = Review.objects.all()
+    allImages = ProjectImage.objects.all()
+    RatedProjects = []
+    
+    for oneproject in allProjects:
+        ProjectRatings = [0]
+        for review in allReviews:
+            if oneproject.id == review.project.id:
+                ProjectRatings.append(review.rating)
+        ProjectRating = sum(ProjectRatings)/len(ProjectRatings)
+        RatedProjects.append({ProjectRating:oneproject})
+    sorted_projects = sorted(RatedProjects, reverse=True, key=lambda x: list(x.keys())[0])
+    HighRatedProjects = [list(project.values())[0] for project in sorted_projects[:5]]
+    
+    
+    #to get the latest 6 projects 
+    ordered_projects = Project.objects.all().order_by('created_at')
+    latest_projects = ordered_projects.reverse()[0:6]
+       
+        
+    
+    # print(HighRatedProjects)
+    # print(latest_objects)
+    
+    if 'find'in request.GET:
+        find=request.GET['find']
+        pro=Project.objects.filter(title__icontains=find)
+        return render(request, 'projects/search_results.html',context={"projects":pro})
+
+        
+    else :   
+        pro=Project.objects.all()
+        return render(request, 'projects/index.html',context={"HighRatedProjects":HighRatedProjects,"latest_projects":latest_projects,"projects":pro})
+    
+        
+        
+    
 
 
 def project_list(request):
@@ -32,9 +69,10 @@ def Createform(request):
             details = form.cleaned_data['details']
             category = form.cleaned_data['category']
             total_target = form.cleaned_data['total_target']
+            cover = form.cleaned_data['cover']
             start_time = form.cleaned_data['start_time']
             end_time = form.cleaned_data['end_time']
-            project = Project(user=user, title=title, details=details, total_target=total_target, category=category,
+            project = Project(user=user, title=title, details=details, total_target=total_target, cover = cover, category=category,
                               start_time=start_time, end_time=end_time)
             project.save()
             tags = form.cleaned_data['tags']
@@ -91,3 +129,5 @@ def project_detail(request, id):
         'donation_form': donation_form,
         'total_donations': total_donations,
     })
+
+
