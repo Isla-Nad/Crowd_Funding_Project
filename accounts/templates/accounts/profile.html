@@ -62,13 +62,13 @@
           {% for pro in projects %}
           <div class="card" style="width: 18rem">
             {% for image in first_images %} {% if image.project_id == pro.id %}
-            <img src="{{ image.image.url }}" class="card-img-top w-100 h-100" alt="..." />
+            <img src="{{ image.image.url }}" class="card-img-top w-100" alt="..." style="height: 250px" />
             {% endif %} {% endfor %}
             <div class="card-body">
               <h5 class="card-title">{{pro.title}}</h5>
-              <a href="{% url 'view' pro.id %}" class="btn btn-primary">Details</a>
-              <p style="color: green">target: ${{pro.total_target}}</p>
-              {% comment %} <a href="{% url 'products.edit' pro.id %}" class="btn btn-warning">Edit</a> {% endcomment %} {% comment %} <a href="{% url 'products.delete' pro.id %}" class="btn btn-danger">Delete</a> {% endcomment %}
+              <a href="{% url 'project.view' pro.id %}" class="btn btn-primary">Details</a>
+              {% comment %} <a href="{% url 'products.edit' pro.id %}" class="btn btn-warning">Edit</a> {% endcomment %}
+              <a href="{% url 'project.delete' pro.id %}" class="btn btn-danger">Delete</a>
             </div>
           </div>
           {% endfor %}
@@ -81,10 +81,11 @@
         <div class="row gap-3 container m-auto my-3">
           {% for project, first_image,donation in project_with_first_images %}
           <div class="card" style="width: 18rem">
-            <img src="{{ first_image.image.url }}" alt="{{ project.title }} Image" class="card-img-top w-100 h-100" />
+            <img src="{{ first_image.image.url }}" alt="{{ project.title }} Image" class="card-img-top w-100" style="height: 250px" />
             <div class="card-body">
               <h4 class="card-title">{{project.title}}</h4>
-              <h5>Donation_amount: {{ donation.donation_amount }}</h5>
+              <p style="color: green">Target: ${{project.total_target}}</p>
+              <p style="color: green">Donation_amount: {{ donation.donation_amount }}</p>
             </div>
           </div>
           {% endfor %}

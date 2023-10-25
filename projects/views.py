@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from projects.forms import ProjectReportForm
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.db.models import Sum
+from django.db.models import Sum, Avg, Count
 from projects.forms import DonationForm, ProjectForm,  ReviewForm
 from projects.models import Donation, ProjectImage, Project, Review
 
@@ -26,7 +26,7 @@ def project_list(request):
 
 
 @login_required
-def Createform(request):
+def createform(request):
     form = ProjectForm()
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES)
@@ -59,9 +59,13 @@ def project_detail(request, id):
     images = ProjectImage.objects.filter(project_id=id)
     reviews = Review.objects.filter(project_id=id)
     donations = Donation.objects.filter(project_id=id)
-
+    overall_rating = reviews.aggregate(Avg('rating'))['rating__avg']
     total_donations = donations.aggregate(Sum('donation_amount'))[
         'donation_amount__sum'] or 0
+    similar_projects = Project.objects.filter(tags__in=project.tags.all()) \
+        .exclude(id=project.id) \
+        .annotate(tag_count=Count('tags')) \
+        .order_by('-tag_count')[:4]
 
     if request.method == 'POST':
         if 'donate' in request.POST:
@@ -94,6 +98,8 @@ def project_detail(request, id):
         'form': form,
         'donation_form': donation_form,
         'total_donations': total_donations,
+        'overall_rating': overall_rating,
+        'similar_projects': similar_projects,
     })
 
 

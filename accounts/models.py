@@ -16,7 +16,7 @@ class UserProfile(models.Model):
     country = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username}"
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):

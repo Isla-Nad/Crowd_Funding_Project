@@ -4,7 +4,7 @@
   {% for pro in projects %}
   <div class="card" style="width: 18rem">
     {% for image in first_images %} {% if image.project_id == pro.id %}
-    <img src="{{ image.image.url }}" class="card-img-top w-100 h-100" alt="..." />
+    <img src="{{ image.image.url }}" class="card-img-top w-100" alt="..." style="height: 250px" />
     {% endif %} {% endfor %}
     <div class="card-body">
       <h5 class="card-title">{{pro.title}}</h5>

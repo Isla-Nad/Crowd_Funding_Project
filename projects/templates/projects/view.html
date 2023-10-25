@@ -124,6 +124,14 @@
               </ul>
             </td>
           </tr>
+          <tr>
+            <th>Similar Projects</th>
+            <td>
+              {% for similar_project in similar_projects %}
+              <li><a href="{% url 'project.view' similar_project.id %}">{{ similar_project.title }}</a></li>
+              {% endfor %}
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -132,7 +140,7 @@
 <hr style="border: dashed" />
 
 <div class="container">
-  <h3>All ratings and reviews</h3>
+  <h3>Overall Rating:{% if overall_rating %}{{overall_rating}}{% endif %}</h3>
   {% for review in reviews %}
   <p>{{ review.user.username }}</p>
   <p>{{ review.review_desp }}</p>
