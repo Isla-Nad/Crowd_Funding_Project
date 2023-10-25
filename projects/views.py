@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from projects.forms import ProjectReportForm,CommentReportForm
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.db.models import Sum
+from django.db.models import Sum, Avg, Count
 from projects.forms import DonationForm, ProjectForm,  ReviewForm
 from projects.models import Donation, ProjectImage, Project, Review
 
@@ -24,7 +25,8 @@ def project_list(request):
     return render(request, 'projects/projects.html', context={'projects': projects, 'first_images': first_images, })
 
 
-def Createform(request):
+@login_required
+def createform(request):
     form = ProjectForm()
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES)
@@ -46,9 +48,8 @@ def Createform(request):
             for image in images:
                 project_image = ProjectImage(project=project, image=image)
                 project_image.save()
-            print(project)
 
-            return redirect('projects')
+            return redirect('projects.list')
 
     return render(request, 'projects/createforum.html', context={'form': form})
 
@@ -58,9 +59,13 @@ def project_detail(request, id):
     images = ProjectImage.objects.filter(project_id=id)
     reviews = Review.objects.filter(project_id=id)
     donations = Donation.objects.filter(project_id=id)
-
+    overall_rating = reviews.aggregate(Avg('rating'))['rating__avg']
     total_donations = donations.aggregate(Sum('donation_amount'))[
         'donation_amount__sum'] or 0
+    similar_projects = Project.objects.filter(tags__in=project.tags.all()) \
+        .exclude(id=project.id) \
+        .annotate(tag_count=Count('tags')) \
+        .order_by('-tag_count')[:4]
 
     if request.method == 'POST':
         if 'donate' in request.POST:
@@ -72,7 +77,7 @@ def project_detail(request, id):
                     donation.user = request.user
                     donation.project = project
                     donation.save()
-                return redirect(reverse('view', args=[id]))
+                return redirect(reverse('project.view', args=[id]))
 
         else:
             form = ReviewForm(request.POST)
@@ -81,7 +86,7 @@ def project_detail(request, id):
                 new_review.user = request.user
                 new_review.project = project
                 new_review.save()
-                return redirect(reverse('view', args=[id]))
+                return redirect(reverse('project.view', args=[id]))
     else:
         form = ReviewForm()
         donation_form = DonationForm()
@@ -93,9 +98,35 @@ def project_detail(request, id):
         'form': form,
         'donation_form': donation_form,
         'total_donations': total_donations,
+        'overall_rating': overall_rating,
+        'similar_projects': similar_projects,
     })
 
 
+@login_required
+def delete_project(request, id):
+    project = get_object_or_404(Project, id=id)
+
+    if project.user == request.user:
+        donations = Donation.objects.filter(project=project)
+        total_donations = donations.aggregate(Sum('donation_amount'))[
+            'donation_amount__sum'] or 0
+        if total_donations < 0.25 * float(project.total_target):
+            if request.method == 'POST':
+                project.delete()
+                return redirect(reverse('projects.list'))
+            return render(request, 'projects/delete_project.html')
+        else:
+            messages.error(
+                request, "You cannot delete this project as total donations exceed 25% of the target.")
+            return redirect(reverse('project.view', args=[id]))
+    else:
+        messages.error(
+            request, "Permission denied: You are not the creator of this project.")
+        return redirect(reverse('project.view', args=[id]))
+
+
+@login_required
 def send_report_notification(report):
     subject = f"New Report from {report.user} for Project: {report.project.title}"
     message = f'''A new report has been submitted for the project: {report.project}

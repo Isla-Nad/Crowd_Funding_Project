@@ -1,18 +1,11 @@
 from django.urls import path
-from projects.views import project_list, project_detail, Createform
+from projects.views import project_list, project_detail, createform, delete_project, add_report, report_comment_view
 
 urlpatterns = [
-    path('projects/', project_list, name='projects'),
-    path('create/', Createform, name='create'),
-    path('view/<int:id>', project_detail, name="view"),
-]
-
-
-## ! 
-
-from projects.views import add_report,report_comment_view
-
-urlpatterns+= [
-    path('report/<id>',add_report,name='project.report'),
-    path('reportcomment/<id>',report_comment_view,name='comment.report'),
+    path('projects/', project_list, name='projects.list'),
+    path('create/', createform, name='project.create'),
+    path('view/<int:id>', project_detail, name="project.view"),
+    path('report/<int:id>', add_report, name='project.report'),
+    path('reportcomment/<int:id>', report_comment_view, name='comment.report'),
+    path('delete/<int:id>', delete_project, name="project.delete"),
 ]

@@ -1,3 +1,4 @@
+from projects.models import Report, ReportComment
 from django import forms
 from categories.models import Category, Tag
 from projects.models import Donation, Project, Review
@@ -73,19 +74,13 @@ class ReviewForm(forms.ModelForm):
         fields = ['rating', 'review_desp']
 
 
-###### ! Roport porject 
-##! import report related 
-from projects.models import Report ,ReportComment
-
-
 class ProjectReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['reason','description']
+        fields = ['reason', 'description']
 
 #! Report comment 
 class CommentReportForm(forms.ModelForm):
     class Meta:
         model = ReportComment
-        fields = ['reason','description']
-
+        fields = ['reason', 'description']
