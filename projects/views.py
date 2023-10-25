@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from projects.forms import ProjectReportForm
+from projects.forms import ProjectReportForm,CommentReportForm
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.db.models import Sum, Avg, Count
@@ -139,7 +139,7 @@ def send_report_notification(report):
     # recipient_list = ['islamnady95@gmail.com',]
 
     send_mail(subject, message, from_email,
-              recipient_list, fail_silently=False)
+                recipient_list, fail_silently=False)
 
 
 @login_required
@@ -161,3 +161,37 @@ def add_report(request, id):
 
     context = {'reportform': form, 'project': project}
     return render(request, 'report/addreport.html', context)
+
+#! Report comment view
+
+def send_report_notification(report):
+    subject = f"New Report from {report.user} for user's comment: {report.review.user}"
+    message = f'''A new report has been submitted for the Comment: {report.review.review_desp}
+                for reason {report.reason}
+                and detials {report.description}.'''
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = ['kadem73980@tutoreve.com',]
+
+    send_mail(subject, message, from_email,
+                recipient_list, fail_silently=False)
+
+
+@login_required
+def report_comment_view(request, id):
+    review = Review.objects.get(id=id)
+
+    if request.method == 'POST':
+        form = CommentReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.user = request.user 
+            report.review = review
+            report.save()
+            send_report_notification(report)
+            return redirect('projects')
+    else:
+        form = CommentReportForm()
+
+    context = {'reportform': form, 'review': review}
+    return render(request, 'report/reportcomment.html', context)
+
