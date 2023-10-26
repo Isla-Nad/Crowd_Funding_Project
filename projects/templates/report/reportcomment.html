@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %} Report {% endblock %} {% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h3 class="text-danger text-align-center">Reporting {{review.review_desp}}</h3>
+      <form method="post">
+        {% csrf_token %} {{ reportform.as_p }}
+        <button type="submit" class="btn btn-danger">Submit Report</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="{% static 'projects/js/script.js' %}"></script>
+
+{% endblock content %}

@@ -78,6 +78,7 @@
   </div>
 </div>
 <hr style="border: dashed" />
+
 <div class="container">
   <div class="row">
     <div class="col-md-6">
@@ -99,6 +100,10 @@
             <th>End Time</th>
             <td>{{ project.end_time }}</td>
           </tr>
+          <tr>
+            <th>Created by</th>
+            <td>{{ project.user }}</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -119,6 +124,14 @@
               </ul>
             </td>
           </tr>
+          <tr>
+            <th>Similar Projects</th>
+            <td>
+              {% for similar_project in similar_projects %}
+              <li><a href="{% url 'project.view' similar_project.id %}">{{ similar_project.title }}</a></li>
+              {% endfor %}
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -127,26 +140,34 @@
 <hr style="border: dashed" />
 
 <div class="container">
-  <h3>All ratings and reviews</h3>
+  <h3>Overall Rating:{% if overall_rating %}{{overall_rating}}{% endif %}</h3>
   {% for review in reviews %}
-  <p>{{ review.user.username }}</p>
-  <p>{{ review.review_desp }}</p>
-  {% if review.rating > 0 %}
-  <i class="fa fa-star {% if review.rating < 1 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
-  <i class="fa fa-star {% if review.rating < 2 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
-  <i class="fa fa-star {% if review.rating < 3 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
-  <i class="fa fa-star {% if review.rating < 4 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
-  <i class="fa fa-star {% if review.rating < 5 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
-  <hr />
-  {% else %}
-  <i class="fa fa-star" id="star"></i>
-  <i class="fa fa-star" id="star"></i>
-  <i class="fa fa-star" id="star"></i>
-  <i class="fa fa-star" id="star"></i>
-  <i class="fa fa-star" id="star"></i>
-  &nbsp;<span>No ratings</span>
-  <hr />
-  {% endif %} {% endfor %}
+  <div class="list-group">
+    <div class="comment list-group-item">
+      <div class="list-group-item d-flex justify-content-between">
+        <h3 class="text-info">{{ review.user.username }}</h3>
+        <a class="text-danger" href="{% url 'comment.report' review.id %}">&#9873; Report</a>
+      </div>
+      <hr />
+      <p>{{ review.review_desp }}</p>
+      {% if review.rating > 0 %}
+      <i class="fa fa-star {% if review.rating < 1 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+      <i class="fa fa-star {% if review.rating < 2 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+      <i class="fa fa-star {% if review.rating < 3 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+      <i class="fa fa-star {% if review.rating < 4 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+      <i class="fa fa-star {% if review.rating < 5 %} no-checked {% else %} checked {% endif %}" id="check-star"></i>
+      {% else %}
+      <i class="fa fa-star" id="star"></i>
+      <i class="fa fa-star" id="star"></i>
+      <i class="fa fa-star" id="star"></i>
+      <i class="fa fa-star" id="star"></i>
+      <i class="fa fa-star" id="star"></i>
+      &nbsp;<span>No ratings</span>
+      <hr />
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
 
   <form method="post">
     {% csrf_token %}
@@ -192,5 +213,23 @@
     </div>
   </form>
 </div>
+<hr style="border: dashed" />
+
+<div class="container d-flex justify-content-around my-3">
+  <a class="btn btn-outline-danger" href="{% url 'project.report' project.id %}">Report this Project</a>
+  <a class="btn btn-outline-danger" href="{% url 'project.delete' project.id %}">delete Project</a>
+</div>
+<div class="container d-flex justify-content-end">
+  {% if messages %}
+  <div class="messages">
+    <ul class="errorlist">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endif %}
 <script src="{% static 'projects/js/script.js' %}"></script>
 {% endblock %}
