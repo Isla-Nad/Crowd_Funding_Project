@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'categories.apps.CategoriesConfig',
     'django_cleanup.apps.CleanupConfig',
+    'about.apps.AboutConfig',
 ]
 
 MIDDLEWARE = [
