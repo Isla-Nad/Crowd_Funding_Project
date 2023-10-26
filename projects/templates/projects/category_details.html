@@ -1,33 +1,15 @@
-{% extends 'layouts/base.html' %} {% load static %} {% block title %}Crowd Funding{% endblock %}
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Crowd Funding{% endblock %} {% block content %}
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-{% block content %}
-
-
-    
-
-<div class="container">
-  <div class="row">
-    
-    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-      {% for project in mycategory.projects.all %}
-      <div class="col">
-        <div class="card">
-          <img src="{{project.get_image_url}}" style="height: 20rem" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">{{project.title}}</h5>
-            <p class="card-text">{{project.details}}</p>
-            <p class="card-text">Project Target : {{project.total_target}}</p>
-            <p class="card-text">Project Category : {{project.category}}</p>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-      
+<div class="row gap-5 container m-auto my-3">
+  {% for project in mycategory.projects.all %}
+  <div class="card" style="width: 18rem">
+    <img src="{{project.get_image_url}}" style="height: 250px" class="card-img-top w-100" alt="..." />
+    <div class="card-body">
+      <h5 class="card-title">{{project.title}}</h5>
+      <a href="{% url 'project.view' project.id %}" class="btn btn-primary">Details</a>
     </div>
   </div>
+  {% endfor %}
 </div>
-
 
 {% endblock%}

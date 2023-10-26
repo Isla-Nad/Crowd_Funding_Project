@@ -1,8 +1,4 @@
-{% extends 'layouts/base.html' %} {% load static %} {% block title %}Crowd Funding{% endblock %}
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-{% block content %}
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Crowd Funding{% endblock %} {% block content %}
 
 <div class="row gap-5 container m-auto my-3">
   {% for project in projects %}
@@ -12,8 +8,8 @@
       <h5 class="card-title">{{project.title}}</h5>
       <a href="{% url 'project.view' project.id %}" class="btn btn-primary">Details</a>
     </div>
-    {% endfor %}
   </div>
+  {% endfor %}
 </div>
 
 {% endblock%}

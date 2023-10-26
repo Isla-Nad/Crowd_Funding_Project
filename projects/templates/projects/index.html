@@ -48,15 +48,13 @@
 <div class="container">
   <div class="row">
     <h2 class="text-center mt-5">Our latest projects</h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row gap-5 container m-auto my-3">
       {% for project in latest_projects %}
-      <div class="col">
-        <div class="card" style="width: 18rem">
-          <img src="{{project.get_image_url}}" style="height: 250px" class="card-img-top w-100" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">{{project.title}}</h5>
-            <a href="{% url 'project.view' project.id %}" class="btn btn-primary">Details</a>
-          </div>
+      <div class="card" style="width: 18rem">
+        <img src="{{project.get_image_url}}" style="height: 250px" class="card-img-top w-100" alt="..." />
+        <div class="card-body">
+          <h5 class="card-title">{{project.title}}</h5>
+          <a href="{% url 'project.view' project.id %}" class="btn btn-primary">Details</a>
         </div>
       </div>
       {% endfor %}
