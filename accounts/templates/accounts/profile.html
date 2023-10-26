@@ -40,15 +40,15 @@
           {% if user.id == request.user.id %}
           <tr>
             <th>Delete Account</th>
-            <td><a class="btn btn-outline-danger" href="{% url 'accounts.delete' %}"></a></td>
+            <td><a class="btn btn-outline-danger" href="{% url 'accounts.delete' %}">Delete</a></td>
           </tr>
           <tr>
             <th>Edit User Info</th>
-            <td><a class="btn btn-outline-warning" href="{% url 'accounts.edit' %}"></a></td>
+            <td><a class="btn btn-outline-warning" href="{% url 'accounts.edit' %}">Edit User Info</a></td>
           </tr>
           <tr>
             <th>Edit Profile</th>
-            <td><a class="btn btn-outline-warning" href="{% url 'profile.edit' user.id %}"></a></td>
+            <td><a class="btn btn-outline-warning" href="{% url 'profile.edit' user.id %}">Edit Profile</a></td>
           </tr>
           {% endif %}
         </table>
