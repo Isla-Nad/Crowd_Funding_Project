@@ -3,14 +3,10 @@
 <div class="row gap-5 container m-auto my-3">
   {% for pro in projects %}
   <div class="card" style="width: 18rem">
-    {% for image in first_images %} {% if image.project_id == pro.id %}
-    <img src="{{ image.image.url }}" class="card-img-top w-100" alt="..." style="height: 250px" />
-    {% endif %} {% endfor %}
+    <img src="{{pro.get_image_url}}" style="height: 250px" class="card-img-top w-100" alt="..." />
     <div class="card-body">
       <h5 class="card-title">{{pro.title}}</h5>
       <a href="{% url 'project.view' pro.id %}" class="btn btn-primary">Details</a>
-      {% comment %} <a href="{% url 'products.edit' pro.id %}" class="btn btn-warning">Edit</a> {% endcomment %}
-      <a href="{% url 'project.delete' pro.id %}" class="btn btn-danger">Delete</a>
     </div>
   </div>
   {% endfor %}

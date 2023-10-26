@@ -2,16 +2,50 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from projects.forms import ProjectReportForm,CommentReportForm
+from projects.forms import ProjectReportForm, CommentReportForm
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.db.models import Sum, Avg, Count
 from projects.forms import DonationForm, ProjectForm,  ReviewForm
 from projects.models import Donation, ProjectImage, Project, Review
+from categories.models import Category
 
 
 def index(request):
-    return render(request, 'projects/index.html')
+    allProjects = Project.objects.all()
+    allReviews = Review.objects.all()
+    RatedProjects = []
+
+    for oneproject in allProjects:
+        ProjectRatings = [0]
+        for review in allReviews:
+            if oneproject.id == review.project.id:
+                ProjectRatings.append(review.rating)
+        ProjectRating = sum(ProjectRatings)/len(ProjectRatings)
+        RatedProjects.append({ProjectRating: oneproject})
+    sorted_projects = sorted(RatedProjects, reverse=True,
+                             key=lambda x: list(x.keys())[0])
+    HighRatedProjects = [list(project.values())[0]
+                         for project in sorted_projects[:5]]
+
+    ordered_projects = Project.objects.all().order_by('created_at')
+    latest_projects = ordered_projects.reverse()[0:6]
+
+    categories = Category.objects.all()
+
+    pro = Project.objects.all()
+    return render(request, 'projects/index.html', context={"HighRatedProjects": HighRatedProjects, "latest_projects": latest_projects, "projects": pro, "categories": categories})
+
+
+def projects_search(request):
+    find = request.GET.get('find', '')
+    projects = Project.objects.filter(title__icontains=find)
+    return render(request, 'projects/search_results.html', context={"projects": projects, 'search_term': find})
+
+
+def category_details(request, category):
+    mycategory = Category.objects.get(name=category)
+    return render(request, 'projects/category_details.html', context={'mycategory': mycategory})
 
 
 def project_list(request):
@@ -37,9 +71,10 @@ def createform(request):
             details = form.cleaned_data['details']
             category = form.cleaned_data['category']
             total_target = form.cleaned_data['total_target']
+            cover = form.cleaned_data['cover']
             start_time = form.cleaned_data['start_time']
             end_time = form.cleaned_data['end_time']
-            project = Project(user=user, title=title, details=details, total_target=total_target, category=category,
+            project = Project(user=user, title=title, details=details, total_target=total_target, cover=cover, category=category,
                               start_time=start_time, end_time=end_time)
             project.save()
             tags = form.cleaned_data['tags']
@@ -139,7 +174,7 @@ def send_report_notification(report):
     # recipient_list = ['islamnady95@gmail.com',]
 
     send_mail(subject, message, from_email,
-                recipient_list, fail_silently=False)
+              recipient_list, fail_silently=False)
 
 
 @login_required
@@ -164,6 +199,7 @@ def add_report(request, id):
 
 #! Report comment view
 
+
 def send_report_notification_comment(report):
     subject = f"New Report from {report.user} for user's comment: {report.review.user}"
     message = f'''A new report has been submitted for the Comment: {report.review.review_desp}
@@ -173,7 +209,7 @@ def send_report_notification_comment(report):
     recipient_list = ['kadem73980@tutoreve.com',]
 
     send_mail(subject, message, from_email,
-                recipient_list, fail_silently=False)
+              recipient_list, fail_silently=False)
 
 
 @login_required
@@ -184,7 +220,7 @@ def report_comment_view(request, id):
         form = CommentReportForm(request.POST)
         if form.is_valid():
             report = form.save(commit=False)
-            report.user = request.user 
+            report.user = request.user
             report.review = review
             report.save()
             send_report_notification_comment(report)
@@ -194,4 +230,3 @@ def report_comment_view(request, id):
 
     context = {'reportform': form, 'review': review}
     return render(request, 'report/reportcomment.html', context)
-

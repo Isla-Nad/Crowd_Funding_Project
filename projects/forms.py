@@ -32,6 +32,7 @@ class ProjectForm(ModelForm):
         label="Category"
     )
     total_target = forms.DecimalField()
+    cover = forms.ImageField()
     start_time = forms.DateTimeField(
         widget=NumberInput(
             attrs={
@@ -72,6 +73,10 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['rating', 'review_desp']
+        
+        
+        
+
 
 
 class ProjectReportForm(forms.ModelForm):
