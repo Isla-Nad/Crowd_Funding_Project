@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.html import strip_tags
@@ -61,18 +62,20 @@ def activate(request, uidb64, token):
 
 def user_login(request):
     if request.method == 'POST':
-        form = EmailAuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect(reverse('accounts.profile', args=[user.pk]))
-        else:
-            messages.error(
-                request, 'Your email or password is incorrect. Please try again.')
-    else:
-        form = EmailAuthenticationForm()
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
 
-    return render(request, 'accounts/login.html', {'form': form})
+        if user is not None:
+            login(request, user)
+            # Redirect to a success page or do what's needed upon successful login
+            return HttpResponseRedirect(reverse('accounts.profile', args=[user.pk]))
+        else:
+            # Authentication failed, you can return an error message or redirect to a login page with an error message
+            return render(request, 'accounts/login.html', {'error_message': 'Email or password is incorrect.'})
+    else:
+        # Display the login form for GET requests
+        return render(request, 'accounts/login.html')
 
 
 def user_logout(request):
