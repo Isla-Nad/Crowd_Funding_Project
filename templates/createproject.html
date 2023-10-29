@@ -1,0 +1,17 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css'%}" />
+<link rel="stylesheet" href="{% static 'projects/css/styles.css' %}" />
+
+
+<h1> create Project </h1>
+<div class="container" style="padding: 50px 0px">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %} 
+        {{ form }}
+      <button type="submit" class="btn btn-primary">Create Project</button>
+    </form>
+    <div>
+      <script src="{% static 'projects/js/script.js'%}"></script>
+    </div>
+  </div>
+  
