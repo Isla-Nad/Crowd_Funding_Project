@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from categories.forms import CategoryForm, ReportForm, TagForm, DonationForm
+#usersform
+from .forms import UserForm
 from categories.models import Category, Tag
 from django.contrib.auth.decorators import user_passes_test
 #to get list of all registered users
 from django.contrib.auth.models import User
 from projects.models import Donation, Report
 from projects.models import Project
-
+###
+from accounts.views import *
 def is_admin(user):
     return user.is_staff
 ##**********************counting*************************
@@ -48,6 +51,14 @@ def category_create(request):
             category_form.save()
             return redirect('categories_list')
     return render(request, 'custom_admin/categories/category_create.html', context={'category_form': category_form})
+#user create
+def user_create(request):
+    user_form = UserForm(request.POST)
+    if request.method == "POST":
+        if user_form.is_valid():
+            user_form.save()
+            return redirect('users_list')
+    return render(request, 'custom_admin/users/user_create.html', context={'user_form': user_form})
 
 
 def tag_create(request):
@@ -70,6 +81,19 @@ def category_edit(request, id):
     else:
         category_form = CategoryForm(instance=category_to_edit)
     return render(request, 'custom_admin/categories/category_edit.html', context={'category_form': category_form})
+#user_edit
+def user_edit(request, id):
+    user_to_edit = get_object_or_404(User, id=id)
+    if request.method == 'POST':
+        user_form = UserForm(
+            request.POST,instance=user_to_edit)
+        if user_form.is_valid():
+            user_form.save()
+            return redirect('users_list')
+    else:
+        user_form = UserForm(instance=user_to_edit)
+    return render(request, 'custom_admin/users/user_edit.html', context={'user_form': user_form})
+
 
 
 def category_delete(request, id):
@@ -78,6 +102,13 @@ def category_delete(request, id):
         category_to_delete.delete()
         return redirect('categories_list')
     return render(request, 'custom_admin/categories/category_delete.html')
+#user delete
+def user_delete(request, id):
+    user_to_delete = get_object_or_404(User, id=id)
+    if request.method == 'POST':
+        user_to_delete.delete()
+        return redirect('users_list')
+    return render(request, 'custom_admin/users/user_delete.html')
 
 
 def tag_edit(request, id):
@@ -188,3 +219,7 @@ def create_report(request):
         form = ReportForm()
 
     return render(request, 'custom_admin/reports/create_report.html', {'form': form})
+
+##create new user
+def create_user(request):
+    return render(request, 'custom_admin/users/create_user.html')
