@@ -1,0 +1,25 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Donations{% endblock %} {% block content %}
+<h1 class="text-center text-info mt-5">Reports</h1>
+<p class="text-center text-dark mt-2"> Here you can control all your Reports </p>
+<div class="container mt-5">
+  <div class="row">
+    <a class="btn btn-dark m-5" href="{% url 'create_report' %}">Create Donation</a>
+{% for report in reports %}
+<div class="card ms-2" style="width: 18rem;">
+  
+  <div class="card-body">
+    <h5 class="card-title">User : {{report.user}}</h5>
+    <h5 class="card-title">Project : {{report.project}}</h5>
+    <p class="card-text">Report Reason: {{report.reason}}</p>
+    <p class="card-text">Report Description: {{report.description}}</p>
+    <a href="{% url 'edit_report' pk=report.pk %}" class="btn btn-success">Edit</a>
+    <a href="{% url 'delete_report' pk=report.pk %}" class="btn btn-danger">Delete</a>
+  </div>
+</div>
+
+{% endfor %}
+  </div>
+</div>
+
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}

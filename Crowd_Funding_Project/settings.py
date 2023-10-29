@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'projects.apps.SuitConfig',
+    # 'projects.apps.SuitConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,8 +85,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'crowd',
-        'USER': 'test',
-        'PASSWORD': 'test',
+        'USER': 'postgres',
+        'PASSWORD': '1311',
         "HOST": 'localhost',
         'PORT': 5432
     }
