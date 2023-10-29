@@ -85,13 +85,13 @@ WSGI_APPLICATION = 'Crowd_Funding_Project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'project',
-        'USER':'postgres',
-        'PASSWORD':'123456',
-        'HOST':'localhost',
-        'PORT':5432
+        'NAME': 'crowd',
+        'USER': 'test',
+        'PASSWORD': 'test',
+        'HOST': 'localhost',
+        'PORT': 5432
 
-}
+    }
 }
 
 # Password validation
