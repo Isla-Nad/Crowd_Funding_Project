@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Edit Tag{% endblock %} {% block content %}
+<div class="container my-4">
+  <hr />
+  <h2 class="text-center bg-body-secondary">Edit Tag</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ tag_form }}
+    <input type="submit" name="tag" class="btn btn-outline-success form-control mt-3" value="Update Tag" />
+  </form>
+</div>
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}

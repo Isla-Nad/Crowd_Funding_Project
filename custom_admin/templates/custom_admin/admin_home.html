@@ -1,0 +1,118 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Admin Home{% endblock %} {% block content %}
+<h1 class="text-center text-info">Admin Home</h1>
+
+<table class="table table-hover container table-secondary shadow table-striped-columns table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2" class="text-center display-5">Authentication and Authorization</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td><a href="{% url 'categories_list' %}" class="">Users</a></td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td><a href="{% url 'tags_list' %}">UsersProfiles</a></td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-hover container table-secondary shadow table-striped-columns table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2" class="text-center display-5">Categories</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td><a href="{% url 'categories_list' %}" class="">Categories</a></td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td><a href="{% url 'tags_list' %}">Tags</a></td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-hover container table-secondary shadow table-striped-columns table-bordered">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2" class="text-center display-5">Projects</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td><a href="{% url 'categories_list' %}" class="">Projects</a></td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td><a href="{% url 'tags_list' %}">Reviews</a></td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td><a href="{% url 'tags_list' %}">Donations</a></td>
+    </tr>
+    <tr>
+      <th scope="row">4</th>
+      <td><a href="{% url 'tags_list' %}">ProjectReports</a></td>
+    </tr>
+    <tr>
+      <th scope="row">5</th>
+      <td><a href="{% url 'tags_list' %}">CommentReports</a></td>
+    </tr>
+  </tbody>
+</table>
+{% comment %}
+<div class="container my-4">
+  <hr />
+  <h2 class="text-center bg-body-secondary">Create Category</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ category_form }}
+    <input type="submit" name="category" class="btn btn-outline-success form-control mt-3" value="Create Category" />
+  </form>
+</div>
+
+<div class="container my-4">
+  <hr />
+  <h2 class="text-center bg-body-secondary">Create Tag</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ tag_form }}
+    <input type="submit" name="tag" class="btn btn-outline-success form-control mt-3" value="Create Tag" />
+  </form>
+</div>
+<hr />
+
+<div class="container my-4">
+  <h2>Categories</h2>
+  <ul class="list-group">
+    {% for category in categories %}
+    <li class="list-group-item d-flex justify-content-between">
+      {{ category.name }}
+      <form method="post" style="display: inline">
+        {% csrf_token %} <button type="submit" name="edit_category_{{ category.id }}" class="btn btn-info btn-sm float-right">Edit</button>
+        <button type="submit" name="delete_category_{{ category.id }}" class="btn btn-danger btn-sm float-right mr-2">Delete</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="container my-4">
+  <h2>Tags</h2>
+  <ul class="list-group">
+    {% for tag in tags %}
+    <li class="list-group-item d-flex justify-content-between">
+      {{ tag.name }}
+      <form method="post" style="display: inline">
+        {% csrf_token %} <button type="submit" name="edit_tag_{{ tag.id }}" class="btn btn-info btn-sm float-right">Edit</button>
+        <button type="submit" name="delete_tag_{{ tag.id }}" class="btn btn-danger btn-sm float-right mr-2">Delete</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endcomment %}
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}

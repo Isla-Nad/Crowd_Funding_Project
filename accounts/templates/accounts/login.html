@@ -10,14 +10,8 @@
     <label for="password">Password</label>
     <input type="password" name="password" id="password" class="form-control" />
   </div>
-  {% if messages %}
-  <div class="messages">
-    <ul class="errorlist">
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-  </div>
+  {% if error_message %}
+  <div class="alert alert-danger">{{ error_message }}</div>
   {% endif %}
   <button type="submit" class="btn btn-outline-success form-control mt-3">Login</button>
 </form>

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'projects.apps.ProjectsConfig',
+    'custom_admin.apps.CustomAdminConfig',
     'categories.apps.CategoriesConfig',
     'django_cleanup.apps.CleanupConfig',
     'about.apps.AboutConfig',

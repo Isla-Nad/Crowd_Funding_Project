@@ -36,29 +36,6 @@ class AccountCreationForm(UserCreationForm):
         return mobile_phone
 
 
-class EmailAuthenticationForm(AuthenticationForm):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'autofocus': True}))
-
-    def clean(self):
-        username = None
-        email = self.cleaned_data.get('email')
-        password = self.cleaned_data.get('password')
-
-        if email is not None and password:
-            self.user_cache = authenticate(
-                self.request, email=email, password=password)
-            if self.user_cache is None:
-                raise forms.ValidationError(
-                    self.error_messages['invalid_login'],
-                    code='invalid_login',
-                    params={'username': self.username_field.verbose_name},
-                )
-            else:
-                self.confirm_login_allowed(self.user_cache)
-
-        return self.cleaned_data
-
-
 class UserProfileForm(forms.ModelForm):
     birthdate = forms.DateTimeField(
         widget=forms.NumberInput(

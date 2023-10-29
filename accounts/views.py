@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.html import strip_tags
@@ -12,7 +11,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_str, force_bytes
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from accounts.forms import AccountCreationForm, EmailAuthenticationForm, UserProfileForm, UserChangeForm
+from accounts.forms import AccountCreationForm, UserProfileForm, UserChangeForm
 from accounts.models import UserProfile
 from projects.models import Donation, Project, ProjectImage
 
@@ -68,13 +67,10 @@ def user_login(request):
 
         if user is not None:
             login(request, user)
-            # Redirect to a success page or do what's needed upon successful login
-            return HttpResponseRedirect(reverse('accounts.profile', args=[user.pk]))
+            return redirect(reverse('accounts.profile', args=[user.pk]))
         else:
-            # Authentication failed, you can return an error message or redirect to a login page with an error message
             return render(request, 'accounts/login.html', {'error_message': 'Email or password is incorrect.'})
     else:
-        # Display the login form for GET requests
         return render(request, 'accounts/login.html')
 
 
