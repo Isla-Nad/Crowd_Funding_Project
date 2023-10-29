@@ -1,0 +1,53 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}About US{% endblock %} {% block content %}
+<div class="container text-center my-5">
+    <!-- about us page -->
+  <h2 class="">Meet Our Team ^_^ </h2>
+  <hr>
+  <div>
+    <div class="container  row ">
+        <div class="row d-flex justify-content-around col-12">
+            <div class="card col-lg-5 col-xsm-6  m-1 mt-5" >
+                <img src="{% static 'images/islam.png' %}" class="card-img-top m-1" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">Islam Nady</h5>
+                <a href="https://www.linkedin.com/in/islam-nady-b25aa1176/" class="btn btn-info">Linkedin</a>
+                </div>
+            </div>
+
+            <div class="card col-lg-5 col-xsm-6  m-1 mt-5" >
+                <img src="{% static 'images/abdullah.jpeg' %}" class="card-img-top m-1" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">Abdullah Ahmed</h5>
+                <a href="https://www.linkedin.com/in/abdo-eg/" class="btn btn-info">Linkedin</a>
+                </div>
+            </div>
+
+            <div class="card col-lg-5 col-xsm-6  m-1 mt-5" >
+                <img src="{% static 'images/mina.jpeg' %}" class="card-img-top m-1" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">Mina Samy</h5>
+                <a href="https://www.linkedin.com/in/minasamy10/" class="btn btn-info">Linkedin</a>
+                </div>
+            </div>
+
+
+            <div class="card col-lg-5 col-xsm-6  m-1 mt-5" >
+                <img src="{% static 'images/gouda.jpeg' %}" class="card-img-top m-1" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">Abdelrahman Gouda</h5>
+                <a href="#" class="btn btn-info">Linkedin</a>
+                </div>
+            </div>
+
+            <div class="card col-lg-5 col-xsm-6  m-1 mt-5" >
+                <img src="{% static 'images/john.jpeg' %}" class="card-img-top m-1" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">John Sameh</h5>
+                <a href="#" class="btn btn-info">Linkedin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock%}

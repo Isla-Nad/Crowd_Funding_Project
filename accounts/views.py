@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.html import strip_tags
@@ -11,8 +12,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_str, force_bytes
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from accounts.forms import AccountCreationForm, UserProfileForm, UserChangeForm
+from accounts.forms import AccountCreationForm, EmailAuthenticationForm, UserProfileForm, UserChangeForm
 from accounts.models import UserProfile
+from projects.models import Donation, Project, ProjectImage
 
 
 def register(request):
@@ -60,20 +62,19 @@ def activate(request, uidb64, token):
 
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+
         if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect(reverse('accounts.profile', args=[user.pk]))
-            else:
-                return render(request, 'accounts/inactive_user.html')
+            login(request, user)
+            # Redirect to a success page or do what's needed upon successful login
+            return HttpResponseRedirect(reverse('accounts.profile', args=[user.pk]))
         else:
-            messages.error(
-                request, 'Your username or password is incorrect. Please try again.')
-            return render(request, 'accounts/login.html')
+            # Authentication failed, you can return an error message or redirect to a login page with an error message
+            return render(request, 'accounts/login.html', {'error_message': 'Email or password is incorrect.'})
     else:
+        # Display the login form for GET requests
         return render(request, 'accounts/login.html')
 
 
@@ -85,9 +86,28 @@ def user_logout(request):
 def profile(request, pk):
     user = User.objects.get(pk=pk)
     user_profile = UserProfile.objects.get(user=user)
+    projects = Project.objects.filter(user=user)
+    donations = Donation.objects.filter(user=user)
+    first_images = []
+
+    for project in projects:
+        first_image = ProjectImage.objects.filter(project=project).first()
+        first_images.append(first_image)
+
+    project_with_first_images = []
+
+    for donation in donations:
+        project = donation.project
+        first_image = ProjectImage.objects.filter(project=project).first()
+        project_with_first_images.append((project, first_image, donation))
+
     context = {
         'user': user,
         'user_profile': user_profile,
+        'projects': projects,
+        'donations': donations,
+        'first_images': first_images,
+        'project_with_first_images': project_with_first_images,
     }
     return render(request, 'accounts/profile.html', context)
 

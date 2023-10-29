@@ -10,13 +10,13 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(
-        upload_to='accounts/profile/', blank=True, null=True)
+        upload_to='accounts/images/', blank=True, null=True)
     birthdate = models.DateField(blank=True, null=True)
     facebook_profile = models.URLField(blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username}"
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
