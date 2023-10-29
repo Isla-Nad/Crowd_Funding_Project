@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Create Category{% endblock %} {% block content %}
+<div class="container my-4">
+  <hr />
+  <h2 class="text-center bg-body-secondary">Create Category</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ category_form }}
+    <input type="submit" name="category" class="btn btn-outline-success form-control mt-3" value="Create Category" />
+  </form>
+</div>
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}

@@ -1,4 +1,4 @@
-from projects.models import Project
+from projects.models import Project,Donation
 from django.contrib import admin
 from projects.models import Report,ReportComment,Review
 
@@ -28,3 +28,6 @@ class ReportAdmin(admin.ModelAdmin):
         return obj.review.user
 
 admin.site.register(ReportComment,ReportAdmin)
+admin.site.register(Donation)
+
+

@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'projects.apps.SuitConfig',
+    # 'projects.apps.SuitConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'projects.apps.ProjectsConfig',
+    'custom_admin.apps.CustomAdminConfig',
     'categories.apps.CategoriesConfig',
     'django_cleanup.apps.CleanupConfig',
+    'about.apps.AboutConfig',
 ]
 
 MIDDLEWARE = [
@@ -86,11 +88,11 @@ DATABASES = {
         'NAME': 'crowd',
         'USER': 'test',
         'PASSWORD': 'test',
-        "HOST": 'localhost',
+        'HOST': 'localhost',
         'PORT': 5432
+
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -110,6 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'accounts.authentication.EmailBackend',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

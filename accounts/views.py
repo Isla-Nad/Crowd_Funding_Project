@@ -11,7 +11,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_str, force_bytes
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from accounts.forms import AccountCreationForm, EmailAuthenticationForm, UserProfileForm, UserChangeForm
+from accounts.forms import AccountCreationForm, UserProfileForm, UserChangeForm
 from accounts.models import UserProfile
 from projects.models import Donation, Project, ProjectImage
 
@@ -61,18 +61,17 @@ def activate(request, uidb64, token):
 
 def user_login(request):
     if request.method == 'POST':
-        form = EmailAuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
             login(request, user)
             return redirect(reverse('accounts.profile', args=[user.pk]))
         else:
-            messages.error(
-                request, 'Your email or password is incorrect. Please try again.')
+            return render(request, 'accounts/login.html', {'error_message': 'Email or password is incorrect.'})
     else:
-        form = EmailAuthenticationForm()
-
-    return render(request, 'accounts/login.html', {'form': form})
+        return render(request, 'accounts/login.html')
 
 
 def user_logout(request):

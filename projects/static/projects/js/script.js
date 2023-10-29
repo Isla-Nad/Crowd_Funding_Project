@@ -19,9 +19,11 @@ if (inputs.length > 0) {
   }
 }
 
-let select = document.querySelector("select");
-if (select) {
-  select.classList.add("form-control");
+let selects = document.querySelectorAll("select");
+if (selects.length > 0) {
+  for (var i = 0; i < selects.length; i++) {
+    selects[i].classList.add("form-control");
+  }
 }
 
 let divs = document.getElementsByClassName("form_element");
