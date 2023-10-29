@@ -16,8 +16,6 @@ total_categories = Category.objects.all().count()
 total_tags = Tag.objects.all().count()
 total_projects = Project.objects.all().count()
 
-
-
 #********************************************************
 @user_passes_test(is_admin)
 def admin_home(request):
@@ -31,7 +29,7 @@ def admin_home(request):
 #users list
 def users_list(request):
     users = User.objects.all()
-    return render(request, 'custom_admin/users_list.html', context={'users': users})
+    return render(request, 'custom_admin/users/users_list.html', context={'users': users,'total_users':total_users})
 
 def categories_list(request):
     categories = Category.objects.all()
