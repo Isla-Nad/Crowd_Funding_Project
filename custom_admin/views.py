@@ -33,12 +33,12 @@ def users_list(request):
 
 def categories_list(request):
     categories = Category.objects.all()
-    return render(request, 'custom_admin/categories_list.html', context={'categories': categories})
+    return render(request, 'custom_admin/categories/categories_list.html', context={'categories': categories})
 
 
 def tags_list(request):
     tags = Tag.objects.all()
-    return render(request, 'custom_admin/tags_list.html', context={'tags': tags})
+    return render(request, 'custom_admin/tags/tags_list.html', context={'tags': tags})
 
 
 def category_create(request):
@@ -47,7 +47,7 @@ def category_create(request):
         if category_form.is_valid():
             category_form.save()
             return redirect('categories_list')
-    return render(request, 'custom_admin/category_create.html', context={'category_form': category_form})
+    return render(request, 'custom_admin/categories/category_create.html', context={'category_form': category_form})
 
 
 def tag_create(request):
@@ -56,7 +56,7 @@ def tag_create(request):
         if tag_form.is_valid():
             tag_form.save()
             return redirect('tags_list')
-    return render(request, 'custom_admin/tag_create.html', context={'tag_form': tag_form})
+    return render(request, 'custom_admin/tags/tag_create.html', context={'tag_form': tag_form})
 
 
 def category_edit(request, id):
@@ -69,7 +69,7 @@ def category_edit(request, id):
             return redirect('categories_list')
     else:
         category_form = CategoryForm(instance=category_to_edit)
-    return render(request, 'custom_admin/category_edit.html', context={'category_form': category_form})
+    return render(request, 'custom_admin/categories/category_edit.html', context={'category_form': category_form})
 
 
 def category_delete(request, id):
@@ -77,7 +77,7 @@ def category_delete(request, id):
     if request.method == 'POST':
         category_to_delete.delete()
         return redirect('categories_list')
-    return render(request, 'custom_admin/category_delete.html')
+    return render(request, 'custom_admin/categories/category_delete.html')
 
 
 def tag_edit(request, id):
@@ -89,7 +89,7 @@ def tag_edit(request, id):
             return redirect('tags_list')
     else:
         tag_form = TagForm(instance=tag_to_edit)
-    return render(request, 'custom_admin/tag_edit.html', context={'tag_form': tag_form})
+    return render(request, 'custom_admin/tags/tag_edit.html', context={'tag_form': tag_form})
 
 
 def tag_delete(request, id):
@@ -97,13 +97,13 @@ def tag_delete(request, id):
     if request.method == 'POST':
         tag_to_delete.delete()
         return redirect('tags_list')
-    return render(request, 'custom_admin/tag_delete.html')
+    return render(request, 'custom_admin/tags/tag_delete.html')
 
 
 @user_passes_test(is_admin)
 def donation(request):
     donations = Donation.objects.all()
-    return render(request, 'custom_admin/donation.html', context={"donations": donations})
+    return render(request, 'custom_admin/donations/donation.html', context={"donations": donations})
 
 
 @user_passes_test(is_admin)
@@ -118,7 +118,7 @@ def edit_donation(request, pk):
     else:
         form = DonationForm(instance=donation)
 
-    return render(request, 'custom_admin/edit_donation.html', {'form': form})
+    return render(request, 'custom_admin/donations/edit_donation.html', {'form': form})
 
 
 @user_passes_test(is_admin)
@@ -129,7 +129,7 @@ def delete_donation(request, pk):
         donation.delete()
         return redirect('donation')
 
-    return render(request, 'custom_admin/delete_donation.html', {'donation': donation})
+    return render(request, 'custom_admin/donations/delete_donation.html', {'donation': donation})
 
 
 @user_passes_test(is_admin)
@@ -142,13 +142,13 @@ def create_donation(request):
     else:
         form = DonationForm()
 
-    return render(request, 'custom_admin/create_donation.html', {'form': form})
+    return render(request, 'custom_admin/donations/create_donation.html', {'form': form})
 
 
 @user_passes_test(is_admin)
 def report(request):
     reports = Report.objects.all()
-    return render(request, 'custom_admin/report.html', context={"reports": reports})
+    return render(request, 'custom_admin/reports/report.html', context={"reports": reports})
 
 
 @user_passes_test(is_admin)
@@ -163,7 +163,7 @@ def edit_report(request, pk):
     else:
         form = ReportForm(instance=report)
 
-    return render(request, 'custom_admin/edit_report.html', {'form': form})
+    return render(request, 'custom_admin/reports/edit_report.html', {'form': form})
 
 
 @user_passes_test(is_admin)
@@ -174,7 +174,7 @@ def delete_report(request, pk):
         report.delete()
         return redirect('report')
 
-    return render(request, 'custom_admin/delete_report.html', {'report': report})
+    return render(request, 'custom_admin/reports/delete_report.html', {'report': report})
 
 
 @user_passes_test(is_admin)
@@ -187,4 +187,4 @@ def create_report(request):
     else:
         form = ReportForm()
 
-    return render(request, 'custom_admin/create_report.html', {'form': form})
+    return render(request, 'custom_admin/reports/create_report.html', {'form': form})
