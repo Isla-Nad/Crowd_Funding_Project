@@ -1,9 +1,10 @@
 from django.urls import path
-from custom_admin.views import admin_home, categories_list, create_donation, create_report, delete_donation, delete_report, donation, edit_donation, edit_report, report, tags_list, category_create, tag_create, category_edit, tag_edit, category_delete, tag_delete
+from custom_admin.views import admin_home, categories_list,users_list, create_donation, create_report, delete_donation, delete_report, donation, edit_donation, edit_report, report, tags_list, category_create, tag_create, category_edit, tag_edit, category_delete, tag_delete
 
 urlpatterns = [
     path('admin_home/', admin_home, name='admin_home'),
     path('categories_list/', categories_list, name='categories_list'),
+    path('users_list/', users_list, name='users_list'),
     path('tags_list/', tags_list, name='tags_list'),
     path('category_create/', category_create, name='category_create'),
     path('tag_create/', tag_create, name='tag_create'),
@@ -19,4 +20,5 @@ urlpatterns = [
     path('edit_report/<int:pk>/', edit_report, name='edit_report'),
     path('delete_report/<int:pk>/', delete_report, name='delete_report'),
     path('create_report/', create_report, name='create_report'),
+
 ]

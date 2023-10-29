@@ -2,18 +2,36 @@ from django.shortcuts import render, redirect, get_object_or_404
 from categories.forms import CategoryForm, ReportForm, TagForm, DonationForm
 from categories.models import Category, Tag
 from django.contrib.auth.decorators import user_passes_test
-
+#to get list of all registered users
+from django.contrib.auth.models import User
 from projects.models import Donation, Report
-
+from projects.models import Project
 
 def is_admin(user):
     return user.is_staff
+##**********************counting*************************
+#get number of all registerd users
+total_users = User.objects.all().count()
+total_categories = Category.objects.all().count()
+total_tags = Tag.objects.all().count()
+total_projects = Project.objects.all().count()
 
 
+
+#********************************************************
 @user_passes_test(is_admin)
 def admin_home(request):
-    return render(request, 'custom_admin/admin_home.html')
+    counts ={'total_users':total_users, 
+            'total_categories':total_categories,
+            'total_tags':total_tags,
+            'total_projects':total_projects,
+            }
+    return render(request, 'custom_admin/admin_home.html',counts)
 
+#users list
+def users_list(request):
+    users = User.objects.all()
+    return render(request, 'custom_admin/users_list.html', context={'users': users})
 
 def categories_list(request):
     categories = Category.objects.all()
