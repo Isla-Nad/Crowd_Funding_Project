@@ -30,20 +30,21 @@ def admin_home(request):
     return render(request, 'custom_admin/admin_home.html',counts)
 
 #users list
+@user_passes_test(is_admin)
 def users_list(request):
     users = User.objects.all()
     return render(request, 'custom_admin/users/users_list.html', context={'users': users,'total_users':total_users})
-
+@user_passes_test(is_admin)
 def categories_list(request):
     categories = Category.objects.all()
     return render(request, 'custom_admin/categories/categories_list.html', context={'categories': categories})
 
-
+@user_passes_test(is_admin)
 def tags_list(request):
     tags = Tag.objects.all()
     return render(request, 'custom_admin/tags/tags_list.html', context={'tags': tags})
 
-
+@user_passes_test(is_admin)
 def category_create(request):
     category_form = CategoryForm(request.POST, request.FILES)
     if request.method == "POST":
@@ -52,15 +53,20 @@ def category_create(request):
             return redirect('categories_list')
     return render(request, 'custom_admin/categories/category_create.html', context={'category_form': category_form})
 #user create
+@user_passes_test(is_admin)
 def user_create(request):
     user_form = UserForm(request.POST)
     if request.method == "POST":
         if user_form.is_valid():
+            username = request.POST['username']
+            email = request.POST['email']
+            password = request.POST['password']
+            user = User.objects.create_user(username, email, password)
             user_form.save()
             return redirect('users_list')
     return render(request, 'custom_admin/users/user_create.html', context={'user_form': user_form})
 
-
+@user_passes_test(is_admin)
 def tag_create(request):
     tag_form = TagForm(request.POST, request.FILES)
     if request.method == "POST":
@@ -69,7 +75,7 @@ def tag_create(request):
             return redirect('tags_list')
     return render(request, 'custom_admin/tags/tag_create.html', context={'tag_form': tag_form})
 
-
+@user_passes_test(is_admin)
 def category_edit(request, id):
     category_to_edit = get_object_or_404(Category, id=id)
     if request.method == 'POST':
@@ -82,6 +88,7 @@ def category_edit(request, id):
         category_form = CategoryForm(instance=category_to_edit)
     return render(request, 'custom_admin/categories/category_edit.html', context={'category_form': category_form})
 #user_edit
+@user_passes_test(is_admin)
 def user_edit(request, id):
     user_to_edit = get_object_or_404(User, id=id)
     if request.method == 'POST':
@@ -95,7 +102,7 @@ def user_edit(request, id):
     return render(request, 'custom_admin/users/user_edit.html', context={'user_form': user_form})
 
 
-
+@user_passes_test(is_admin)
 def category_delete(request, id):
     category_to_delete = get_object_or_404(Category, id=id)
     if request.method == 'POST':
@@ -103,9 +110,13 @@ def category_delete(request, id):
         return redirect('categories_list')
     return render(request, 'custom_admin/categories/category_delete.html')
 #user delete
+#admin cant delete himself
+@user_passes_test(is_admin)
 def user_delete(request, id):
     user_to_delete = get_object_or_404(User, id=id)
-    if request.method == 'POST':
+    if user_to_delete == request.user:
+        return redirect('users_list')
+    elif request.method == 'POST':
         user_to_delete.delete()
         return redirect('users_list')
     return render(request, 'custom_admin/users/user_delete.html')
@@ -221,5 +232,5 @@ def create_report(request):
     return render(request, 'custom_admin/reports/create_report.html', {'form': form})
 
 ##create new user
-def create_user(request):
-    return render(request, 'custom_admin/users/create_user.html')
+# def create_user(request):
+#     return render(request, 'custom_admin/users/create_user.html')
