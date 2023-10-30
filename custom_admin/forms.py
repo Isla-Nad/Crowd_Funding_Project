@@ -1,8 +1,10 @@
+from datetime import datetime
 import re
 from django import forms
 from accounts.models import UserProfile
 from categories.models import Category, Tag
-from projects.models import Donation, Report, ReportComment, Review
+from projects.forms import MultipleFileField
+from projects.models import Donation, Project, Report, ReportComment, Review
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.models import User
 
@@ -62,6 +64,51 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = '__all__'
+
+
+class ProjectForm(forms.ModelForm):
+    start_time = forms.DateTimeField(
+        widget=forms.NumberInput(
+            attrs={
+                'placeholder': 'Start date & time',
+                'type': 'datetime-local',
+                'class': 'form-control'
+            }
+        ))
+    end_time = forms.DateTimeField(
+        widget=forms.NumberInput(
+            attrs={
+                'placeholder': 'End date & time',
+                'type': 'datetime-local',
+                'class': 'form-control'
+            }
+        ))
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    images = MultipleFileField()
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get("start_time")
+        end_date = cleaned_data.get("end_time")
+        today_date = datetime.strptime(datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S")
+
+        if today_date.date() > end_date.date():
+            msg = "End date should be greater than Current date"
+            self._errors["end_time"] = self.error_class([msg])
+        else:
+            if end_date <= start_date:
+                msg = "End date should be greater than start date."
+                self._errors["end_time"] = self.error_class([msg])
 
 
 class ReviewForm(forms.ModelForm):

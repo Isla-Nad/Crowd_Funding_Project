@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from custom_admin.forms import CategoryForm, ReportCommentForm, ReportForm, ReviewForm, TagForm, DonationForm, UserChangeForm, UserForm, UserProfileForm
+from custom_admin.forms import CategoryForm, ProjectForm, ReportCommentForm, ReportForm, ReviewForm, TagForm, DonationForm, UserChangeForm, UserForm, UserProfileForm
 from categories.models import Category, Tag
 from django.contrib.auth.decorators import user_passes_test
 
 from django.contrib.auth.models import User
 from accounts.models import UserProfile
-from projects.models import Donation, Project, Report, ReportComment, Review
+from projects.models import Donation, Project, ProjectImage, Report, ReportComment, Review
 
 
 def is_admin(user):
@@ -213,6 +213,47 @@ def tag_delete(request, id):
 def projects_list(request):
     projects = Project.objects.all()
     return render(request, 'custom_admin/projects/projects_list.html', context={"projects": projects})
+
+
+@user_passes_test(is_admin)
+def project_create(request):
+    if request.method == "POST":
+        project_form = ProjectForm(request.POST, request.FILES)
+        if project_form.is_valid():
+            project = project_form.save()
+            images = request.FILES.getlist('images')
+            for image in images:
+                project_image = ProjectImage(project=project, image=image)
+                project_image.save()
+            return redirect('projects_list')
+    else:
+        project_form = ProjectForm()
+    return render(request, 'custom_admin/projects/project_create.html', context={'project_form': project_form})
+
+
+@user_passes_test(is_admin)
+def project_edit(request, id):
+    report_comment_to_edit = get_object_or_404(Project, id=id)
+    if request.method == 'POST':
+        project_form = ProjectForm(
+            request.POST, request.FILES, instance=report_comment_to_edit)
+        if project_form.is_valid():
+            project_form.save()
+            return redirect('projects_list')
+    else:
+        project_form = ProjectForm(
+            instance=report_comment_to_edit)
+    return render(request, 'custom_admin/projects/project_edit.html', context={'project_form': project_form})
+
+
+@user_passes_test(is_admin)
+def project_delete(request, id):
+    report_comment_to_delete = get_object_or_404(Project, id=id)
+    if request.method == 'POST':
+        report_comment_to_delete.delete()
+        return redirect('projects_list')
+    return render(request, 'custom_admin/projects/project_delete.html')
+
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # reviews
