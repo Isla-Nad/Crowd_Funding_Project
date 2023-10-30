@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Create Review{% endblock %} {% block content %}
+<div class="container my-4">
+  <hr />
+  <h2 class="text-center bg-body-secondary">Create Review</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ review_form }}
+    <input type="submit" name="review" class="btn btn-outline-success form-control mt-3" value="Create Review" />
+  </form>
+</div>
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}

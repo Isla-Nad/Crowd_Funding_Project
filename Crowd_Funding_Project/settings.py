@@ -85,9 +85,9 @@ WSGI_APPLICATION = 'Crowd_Funding_Project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'crowd',
-        'USER': 'test',
-        'PASSWORD': 'test',
+        'NAME': 'project',
+        'USER': 'postgres',
+        'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': 5432
 

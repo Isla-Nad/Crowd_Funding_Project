@@ -1,5 +1,5 @@
 from django.urls import path
-from custom_admin.views import admin_home, categories_list, create_donation, create_report, delete_donation, delete_report, donation, edit_donation, edit_report, projects_list, report, report_comments_list, reviews_list, tags_list, category_create, tag_create, category_edit, tag_edit, category_delete, tag_delete, user_create, user_delete, user_edit, user_profiles_list, users_list
+from custom_admin.views import admin_home, categories_list, create_donation, create_report, delete_donation, delete_report, donation, edit_donation, edit_report, projects_list, report, report_comments_list, reviews_list,review_create,review_edit,review_delete, tags_list, category_create, tag_create, category_edit, tag_edit, category_delete, tag_delete, user_create, user_delete, user_edit, user_profiles_list, users_list
 
 urlpatterns = [
     path('admin_home/', admin_home, name='admin_home'),
@@ -26,6 +26,9 @@ urlpatterns = [
     path('user_profiles_list/', user_profiles_list, name='user_profiles_list'),
     path('projects_list/', projects_list, name='projects_list'),
     path('reviews_list/', reviews_list, name='reviews_list'),
+    path('review_create/', review_create, name='review_create'),
+    path('review_edit/<int:id>/', review_edit, name='review_edit'),
+    path('review_delete/<int:id>/', review_delete, name='review_delete'),
     path('report_comments_list/', report_comments_list,
          name='report_comments_list'),
 ]

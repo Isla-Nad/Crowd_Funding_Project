@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from custom_admin.forms import CategoryForm, ReportForm, TagForm, DonationForm, UserChangeForm, UserForm
+from custom_admin.forms import CategoryForm, ReportForm, ReviewForm, TagForm, DonationForm, UserChangeForm, UserForm
 from categories.models import Category, Tag
 from django.contrib.auth.decorators import user_passes_test
 
@@ -189,6 +189,37 @@ def projects_list(request):
 def reviews_list(request):
     reviews = Review.objects.all()
     return render(request, 'custom_admin/reviews/reviews_list.html', context={"reviews": reviews})
+@user_passes_test(is_admin)
+def review_create(request):
+    review_form = ReviewForm(request.POST, request.FILES)
+    if request.method == "POST":
+        if review_form.is_valid():
+            review_form.save()
+            return redirect('reviews_list')
+    return render(request, 'custom_admin/reviews/review_create.html', context={'review_form': review_form})
+
+
+@user_passes_test(is_admin)
+def review_edit(request, id):
+    review_to_edit = get_object_or_404(Review, id=id)
+    if request.method == 'POST':
+        review_form = ReviewForm(
+            request.POST, request.FILES, instance=review_to_edit)
+        if review_form.is_valid():
+            review_form.save()
+            return redirect('reviews_list')
+    else:
+        review_form = ReviewForm(instance=review_to_edit)
+    return render(request, 'custom_admin/reviews/review_edit.html', context={'review_form': review_form})
+
+
+@user_passes_test(is_admin)
+def review_delete(request, id):
+    review_to_delete = get_object_or_404(Review, id=id)
+    if request.method == 'POST':
+        review_to_delete.delete()
+        return redirect('reviews_list')
+    return render(request, 'custom_admin/reviews/review_delete.html')
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # donation

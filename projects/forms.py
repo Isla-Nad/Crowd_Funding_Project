@@ -62,7 +62,7 @@ class ProjectForm(ModelForm):
         model = Project
         fields = ['title', 'details',  'category', 'total_target',
                   'start_time', 'end_time', 'tags', 'images', ]
-        def clean(self):
+    def clean(self):
             cleaned_data = super().clean()
             start_date = cleaned_data.get("start_time")
             end_date = cleaned_data.get("end_time")
