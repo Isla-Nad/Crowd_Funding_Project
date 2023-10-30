@@ -1,0 +1,21 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Users{% endblock %} {% block content %}
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Users</h2>
+    <a href="{% url 'user_create' %}" class="btn btn-primary btn-sm">Add New User</a>
+  </div>
+  <ul class="list-group">
+    {% for user in users %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span class="font-weight-bold">{{ user.username }}</span>
+      <div>
+        <a href="/accounts/profile/{{ user.id }}" target="_blank" class="btn btn-info btn-sm mx-1">View</a>
+        <a href="{% url 'user_edit' user.id %}" name="user_edit" class="btn btn-warning btn-sm mx-1">Edit</a>
+        <a href="{% url 'user_delete' user.id %}" name="user_delete" class="btn btn-danger btn-sm mx-1">Delete</a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<script src="{% static 'projects/js/script.js' %}"></script>
+{% endblock %}
