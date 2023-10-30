@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from custom_admin.forms import CategoryForm, ReportForm, TagForm, DonationForm, UserChangeForm, UserForm
+from custom_admin.forms import CategoryForm, ReportForm, ReviewForm, TagForm, DonationForm, UserChangeForm, UserForm, UserProfileForm
 from categories.models import Category, Tag
 from django.contrib.auth.decorators import user_passes_test
 
@@ -90,6 +90,39 @@ def user_delete(request, id):
 def user_profiles_list(request):
     user_profiles = UserProfile.objects.all()
     return render(request, 'custom_admin/user_profiles/user_profiles_list.html', context={'user_profiles': user_profiles})
+
+
+@user_passes_test(is_admin)
+def user_profile_create(request):
+    user_profile_form = UserProfileForm(request.POST, request.FILES)
+    if request.method == "POST":
+        if user_profile_form.is_valid():
+            user_profile_form.save()
+            return redirect('user_profiles_list')
+    return render(request, 'custom_admin/user_profiles/user_profile_create.html', context={'user_profile_form': user_profile_form})
+
+
+@user_passes_test(is_admin)
+def user_profile_edit(request, id):
+    user_profile_to_edit = get_object_or_404(UserProfile, id=id)
+    if request.method == 'POST':
+        user_profile_form = UserProfileForm(
+            request.POST, request.FILES, instance=user_profile_to_edit)
+        if user_profile_form.is_valid():
+            user_profile_form.save()
+            return redirect('user_profiles_list')
+    else:
+        user_profile_form = UserProfileForm(instance=user_profile_to_edit)
+    return render(request, 'custom_admin/user_profiles/user_profile_edit.html', context={'user_profile_form': user_profile_form})
+
+
+@user_passes_test(is_admin)
+def user_profile_delete(request, id):
+    user_profile_to_delete = get_object_or_404(UserProfile, id=id)
+    if request.method == 'POST':
+        user_profile_to_delete.delete()
+        return redirect('user_profiles_list')
+    return render(request, 'custom_admin/user_profiles/user_profile_delete.html')
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # categories

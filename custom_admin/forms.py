@@ -38,6 +38,15 @@ class UserChangeForm(BaseUserChangeForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    birthdate = forms.DateTimeField(
+        widget=forms.NumberInput(
+            attrs={
+                'placeholder': 'birthdate',
+                'type': 'datetime-local',
+                'class': 'form-control'
+            }
+        ))
+
     class Meta:
         model = UserProfile
         fields = '__all__'

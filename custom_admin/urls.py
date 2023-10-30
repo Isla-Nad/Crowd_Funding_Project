@@ -1,5 +1,5 @@
 from django.urls import path
-from custom_admin.views import admin_home, categories_list, create_donation, create_report, delete_donation, delete_report, donation, edit_donation, edit_report, projects_list, report, report_comments_list, reviews_list, tags_list, category_create, tag_create, category_edit, tag_edit, category_delete, tag_delete, user_create, user_delete, user_edit, user_profiles_list, users_list
+from custom_admin.views import admin_home, categories_list, create_donation, create_report, delete_donation, delete_report, donation, edit_donation, edit_report, projects_list, report, report_comments_list, reviews_list, tags_list, category_create, tag_create, category_edit, tag_edit, category_delete, tag_delete, user_create, user_delete, user_edit, user_profile_create, user_profile_delete, user_profile_edit, user_profiles_list, users_list
 
 urlpatterns = [
     path('admin_home/', admin_home, name='admin_home'),
@@ -24,6 +24,12 @@ urlpatterns = [
     path('user_edit/<int:id>/', user_edit, name='user_edit'),
     path('user_delete/<int:id>/', user_delete, name='user_delete'),
     path('user_profiles_list/', user_profiles_list, name='user_profiles_list'),
+    path('user_profile_create/', user_profile_create,
+         name='user_profile_create'),
+    path('user_profile_edit/<int:id>/', user_profile_edit,
+         name='user_profile_edit'),
+    path('user_profile_delete/<int:id>/', user_profile_delete,
+         name='user_profile_delete'),
     path('projects_list/', projects_list, name='projects_list'),
     path('reviews_list/', reviews_list, name='reviews_list'),
     path('report_comments_list/', report_comments_list,
