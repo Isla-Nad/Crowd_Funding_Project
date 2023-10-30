@@ -214,46 +214,49 @@ def admin_projects_list(request):
     context = {'projects':projects}
     return render(request,'custom_admin/projects/projects_list.html',context)
 
-
+# create 
 @user_passes_test(is_admin)
-def project_create(request):
+def admin_create_project(request):
+    form = ProjectForm
     if request.method == "POST":
-        project_form = ProjectForm(request.POST, request.FILES)
-        if project_form.is_valid():
-            project = project_form.save()
+        form = ProjectForm(request.POST, request.FILES)
+        if form.is_valid():
+            project = form.save()
+            project.save()
             images = request.FILES.getlist('images')
             for image in images:
                 project_image = ProjectImage(project=project, image=image)
                 project_image.save()
-            return redirect('projects_list')
-    else:
-        project_form = ProjectForm()
-    return render(request, 'custom_admin/projects/project_create.html', context={'project_form': project_form})
+            return redirect('admin.project')
+    context = {'project_form': form}
+    return render(request,'custom_admin/projects/project_create.html',context)
 
-
-@user_passes_test(is_admin)
-def project_edit(request, id):
-    report_comment_to_edit = get_object_or_404(Project, id=id)
-    if request.method == 'POST':
-        project_form = ProjectForm(
-            request.POST, request.FILES, instance=report_comment_to_edit)
-        if project_form.is_valid():
-            project_form.save()
-            return redirect('projects_list')
-    else:
-        project_form = ProjectForm(
-            instance=report_comment_to_edit)
-    return render(request, 'custom_admin/projects/project_edit.html', context={'project_form': project_form})
 
 
 @user_passes_test(is_admin)
-def project_delete(request, id):
-    report_comment_to_delete = get_object_or_404(Project, id=id)
+def admin_update_project(request,id):
+    project = get_object_or_404(Project,pk=id)
+    form = ProjectForm(instance=project)
+    if request.method == "POST":
+        form = ProjectForm(request.POST, request.FILES,instance=project)
+        if form.is_valid():
+            user = request.user 
+            project = form.save(commit=False)
+            project.user = user  
+            project.save()
+            return redirect('projects_list')
+    context = {'project_form': form}
+    return render(request,'custom_admin/projects/project_edit.html',context)
+
+
+
+@user_passes_test(is_admin)
+def admin_delete_project(request,id):
+    project = get_object_or_404(Project,pk=id)
     if request.method == 'POST':
-        report_comment_to_delete.delete()
+        project.delete()
         return redirect('projects_list')
-    return render(request, 'custom_admin/projects/project_delete.html')
-
+    return render(request,'custom_admin/projects/project_delete.html')
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # reviews
