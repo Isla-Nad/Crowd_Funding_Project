@@ -1,0 +1,17 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Edit User{% endblock %} {% block content %}
+<div class="container my-4">
+  <hr />
+  <h2 class="text-center bg-body-secondary">Edit User</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ user_form }}
+    <input type="submit" name="user" class="btn btn-outline-success form-control mt-3" value="Update User" />
+  </form>
+</div>
+<script type="text/JavaScript" src="{% static 'projects/js/script.js'%}">
+  const elements = document.querySelectorAll('.helptext');
+  elements.forEach(element => {
+    element.classList.remove("d-block");
+    element.classList.add("d-none");
+  });
+</script>
+{% endblock%}

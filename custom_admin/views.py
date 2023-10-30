@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from categories.forms import CategoryForm, ReportForm, TagForm, DonationForm
+from custom_admin.forms import CategoryForm, ReportForm, TagForm, DonationForm, UserChangeForm, UserForm
 from categories.models import Category, Tag
 from django.contrib.auth.decorators import user_passes_test
 
-from projects.models import Donation, Report
+from django.contrib.auth.models import User
+from accounts.models import UserProfile
+from projects.models import Donation, Project, Report, ReportComment, Review
 
 
 def is_admin(user):
@@ -14,15 +16,60 @@ def is_admin(user):
 def admin_home(request):
     return render(request, 'custom_admin/admin_home.html')
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# users
+
+
+def users_list(request):
+    users = User.objects.all()
+    return render(request, 'custom_admin/users_list.html', context={'users': users})
+
+
+def user_create(request):
+    user_form = UserForm(request.POST)
+    if request.method == "POST":
+        if user_form.is_valid():
+            user = user_form.save(commit=False)
+            user.is_active = True
+            user.save()
+            return redirect('users_list')
+    return render(request, 'custom_admin/user_create.html', context={'user_form': user_form})
+
+
+def user_edit(request, id):
+    user_to_edit = get_object_or_404(User, id=id)
+    if request.method == 'POST':
+        user_form = UserChangeForm(
+            request.POST, request.FILES, instance=user_to_edit)
+        if user_form.is_valid():
+            user_form.save()
+            return redirect('users_list')
+    else:
+        user_form = UserChangeForm(instance=user_to_edit)
+    return render(request, 'custom_admin/user_edit.html', context={'user_form': user_form})
+
+
+def user_delete(request, id):
+    user_to_delete = get_object_or_404(User, id=id)
+    if request.method == 'POST':
+        user_to_delete.delete()
+        return redirect('users_list')
+    return render(request, 'custom_admin/user_delete.html')
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# user_profiles
+
+
+def user_profiles_list(request):
+    user_profiles = UserProfile.objects.all()
+    return render(request, 'custom_admin/user_profiles_list.html', context={'user_profiles': user_profiles})
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# categories
+
 
 def categories_list(request):
     categories = Category.objects.all()
     return render(request, 'custom_admin/categories_list.html', context={'categories': categories})
-
-
-def tags_list(request):
-    tags = Tag.objects.all()
-    return render(request, 'custom_admin/tags_list.html', context={'tags': tags})
 
 
 def category_create(request):
@@ -32,15 +79,6 @@ def category_create(request):
             category_form.save()
             return redirect('categories_list')
     return render(request, 'custom_admin/category_create.html', context={'category_form': category_form})
-
-
-def tag_create(request):
-    tag_form = TagForm(request.POST, request.FILES)
-    if request.method == "POST":
-        if tag_form.is_valid():
-            tag_form.save()
-            return redirect('tags_list')
-    return render(request, 'custom_admin/tag_create.html', context={'tag_form': tag_form})
 
 
 def category_edit(request, id):
@@ -63,6 +101,23 @@ def category_delete(request, id):
         return redirect('categories_list')
     return render(request, 'custom_admin/category_delete.html')
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# tags
+
+
+def tags_list(request):
+    tags = Tag.objects.all()
+    return render(request, 'custom_admin/tags_list.html', context={'tags': tags})
+
+
+def tag_create(request):
+    tag_form = TagForm(request.POST, request.FILES)
+    if request.method == "POST":
+        if tag_form.is_valid():
+            tag_form.save()
+            return redirect('tags_list')
+    return render(request, 'custom_admin/tag_create.html', context={'tag_form': tag_form})
+
 
 def tag_edit(request, id):
     tag_to_edit = get_object_or_404(Tag, id=id)
@@ -82,6 +137,24 @@ def tag_delete(request, id):
         tag_to_delete.delete()
         return redirect('tags_list')
     return render(request, 'custom_admin/tag_delete.html')
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# projects
+
+
+@user_passes_test(is_admin)
+def projects_list(request):
+    projects = Project.objects.all()
+    return render(request, 'custom_admin/projects_list.html', context={"projects": projects})
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# reviews
+
+
+@user_passes_test(is_admin)
+def reviews_list(request):
+    reviews = Review.objects.all()
+    return render(request, 'custom_admin/reviews_list.html', context={"reviews": reviews})
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# donation
 
 
 @user_passes_test(is_admin)
@@ -128,6 +201,9 @@ def create_donation(request):
 
     return render(request, 'custom_admin/create_donation.html', {'form': form})
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# report project
+
 
 @user_passes_test(is_admin)
 def report(request):
@@ -172,3 +248,12 @@ def create_report(request):
         form = ReportForm()
 
     return render(request, 'custom_admin/create_report.html', {'form': form})
+
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# report comments
+
+@user_passes_test(is_admin)
+def report_comments_list(request):
+    report_comments = ReportComment.objects.all()
+    return render(request, 'custom_admin/report_comments_list.html', context={"report_comments": report_comments})

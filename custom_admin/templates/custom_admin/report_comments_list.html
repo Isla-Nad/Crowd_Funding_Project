@@ -1,0 +1,20 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Report_comments{% endblock %} {% block content %}
+<div class="container my-4">
+  <div class="d-flex justify-content-between alert">
+    <h2>Report_comments</h2>
+    <a href="{% url 'category_create' %}" class="btn btn-dark btn-sm">add new report_comments</a>
+  </div>
+  <ul class="list-group">
+    {% for report in report_comments %}
+    <li class="list-group-item d-flex justify-content-between">
+      {{ report }}
+      <div style="display: inline">
+        <a href="{% url 'category_edit' report.id %}" name="category_edit" class="btn btn-info btn-sm float-right">Edit</a>
+        <a href="{% url 'category_delete' report.id %}" name="tag_delete" class="btn btn-danger btn-sm float-right mr-2">Delete</a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}

@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Create User{% endblock %} {% block content %}
+<div class="container my-4">
+  <hr />
+  <h2 class="text-center bg-body-secondary">Create User</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ user_form }}
+    <input type="submit" name="user" class="btn btn-outline-success form-control mt-3" value="Create User" />
+  </form>
+</div>
+<script src="{% static 'projects/js/script.js'%}"></script>
+{% endblock%}
