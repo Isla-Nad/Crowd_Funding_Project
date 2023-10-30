@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from accounts.forms import AccountCreationForm, UserProfileForm, UserChangeForm
 from accounts.models import UserProfile
 from projects.models import Donation, Project, ProjectImage
+from django.contrib.auth.forms import SetPasswordForm
 
 
 def register(request):
@@ -147,3 +148,15 @@ def delete_account(request):
         else:
             messages.error(request, 'Incorrect password. Please try again.')
     return render(request, 'accounts/delete_confirm.html')
+
+
+def password_change(request, id):
+    user = request.user
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('accounts.profile', args=[user.pk]))
+    else:
+        form = SetPasswordForm(user)
+    return render(request, 'accounts/password_change.html', context={'form': form})

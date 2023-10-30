@@ -1,5 +1,5 @@
 from django.urls import include, path
-from accounts.views import activate, delete_account, edit_profile, edit_user, profile, register, user_login, user_logout
+from accounts.views import activate, password_change, delete_account, edit_profile, edit_user, profile, register, user_login, user_logout
 
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),
@@ -12,4 +12,5 @@ urlpatterns = [
     path('edit/', edit_user, name='accounts.edit'),
     path('edit/profile/<int:pk>', edit_profile, name='profile.edit'),
     path('delete/', delete_account, name='accounts.delete'),
+    path('password_change/<int:id>', password_change, name='password_change'),
 ]

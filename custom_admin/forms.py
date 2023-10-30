@@ -7,6 +7,8 @@ from projects.forms import MultipleFileField
 from projects.models import Donation, Project, Report, ReportComment, Review
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.utils.translation import gettext, gettext_lazy as _
 
 
 class UserForm(UserCreationForm):
@@ -33,6 +35,11 @@ class UserForm(UserCreationForm):
 
 
 class UserChangeForm(BaseUserChangeForm):
+
+    password = ReadOnlyPasswordHashField(
+        label=_("Password"),
+    )
+
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name',

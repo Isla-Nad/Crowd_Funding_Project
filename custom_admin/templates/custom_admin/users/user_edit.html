@@ -4,14 +4,9 @@
   <h2 class="text-center bg-body-secondary">Edit User</h2>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %} {{ user_form }}
+    <p class="mt-3 text-info">Raw passwords are not stored, so there is no way to see this user’s password, but you can change the password using <a href="{% url 'change_password' user.id %}">this form</a>.</p>
     <input type="submit" name="user" class="btn btn-outline-success form-control mt-3" value="Update User" />
   </form>
 </div>
-<script src="{% static 'projects/js/script.js'%}">
-  const elements = document.querySelectorAll('.helptext');
-  elements.forEach(element => {
-    element.classList.remove("d-block");
-    element.classList.add("d-none");
-  });
-</script>
+<script src="{% static 'projects/js/script.js'%}"></script>
 {% endblock%}

@@ -1,7 +1,12 @@
 {% extends 'layouts/base.html' %} {% load static %} {% block title %}Edit User Info{% endblock %} {% block content %}
-<form method="post" enctype="multipart/form-data" class="container my-4">
-  {% csrf_token %} {{form}}
-  <button type="submit" class="btn btn-outline-success form-control mt-3">Update User Info</button>
-</form>
+<div class="container my-4">
+  <hr />
+  <h2 class="text-center bg-body-secondary">Edit User Info</h2>
+  <form method="post" enctype="multipart/form-data" class="container my-4">
+    {% csrf_token %} {{form}}
+    <p class="mt-3 text-info">Raw passwords are not stored, so there is no way to see this user’s password, but you can change the password using <a href="{% url 'password_change' request.user.id %}">this form</a>.</p>
+    <button type="submit" class="btn btn-outline-success form-control mt-3">Update User Info</button>
+  </form>
+</div>
 <script src="{% static 'projects/js/script.js'%}"></script>
 {% endblock %}

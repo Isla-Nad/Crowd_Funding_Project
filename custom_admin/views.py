@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from custom_admin.forms import CategoryForm, ProjectForm, ReportCommentForm, ReportForm, ReviewForm, TagForm, DonationForm, UserChangeForm, UserForm, UserProfileForm
 from categories.models import Category, Tag
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.forms import SetPasswordForm
 
 from django.contrib.auth.models import User
 from accounts.models import UserProfile
@@ -49,13 +50,15 @@ def users_list(request):
 
 @user_passes_test(is_admin)
 def user_create(request):
-    user_form = UserForm(request.POST)
     if request.method == "POST":
+        user_form = UserForm(request.POST)
         if user_form.is_valid():
             user = user_form.save(commit=False)
             user.is_active = True
             user.save()
             return redirect('users_list')
+    else:
+        user_form = UserForm()
     return render(request, 'custom_admin/users/user_create.html', context={'user_form': user_form})
 
 
@@ -70,7 +73,7 @@ def user_edit(request, id):
             return redirect('users_list')
     else:
         user_form = UserChangeForm(instance=user_to_edit)
-    return render(request, 'custom_admin/users/user_edit.html', context={'user_form': user_form})
+    return render(request, 'custom_admin/users/user_edit.html', context={'user_form': user_form, 'user': user_to_edit})
 
 
 @user_passes_test(is_admin)
@@ -94,11 +97,13 @@ def user_profiles_list(request):
 
 @user_passes_test(is_admin)
 def user_profile_create(request):
-    user_profile_form = UserProfileForm(request.POST, request.FILES)
     if request.method == "POST":
+        user_profile_form = UserProfileForm(request.POST, request.FILES)
         if user_profile_form.is_valid():
             user_profile_form.save()
             return redirect('user_profiles_list')
+    else:
+        user_profile_form = UserProfileForm()
     return render(request, 'custom_admin/user_profiles/user_profile_create.html', context={'user_profile_form': user_profile_form})
 
 
@@ -136,11 +141,13 @@ def categories_list(request):
 
 @user_passes_test(is_admin)
 def category_create(request):
-    category_form = CategoryForm(request.POST, request.FILES)
     if request.method == "POST":
+        category_form = CategoryForm(request.POST, request.FILES)
         if category_form.is_valid():
             category_form.save()
             return redirect('categories_list')
+    else:
+        category_form = CategoryForm()
     return render(request, 'custom_admin/categories/category_create.html', context={'category_form': category_form})
 
 
@@ -178,11 +185,13 @@ def tags_list(request):
 
 @user_passes_test(is_admin)
 def tag_create(request):
-    tag_form = TagForm(request.POST, request.FILES)
     if request.method == "POST":
+        tag_form = TagForm(request.POST)
         if tag_form.is_valid():
             tag_form.save()
             return redirect('tags_list')
+    else:
+        tag_form = TagForm()
     return render(request, 'custom_admin/tags/tag_create.html', context={'tag_form': tag_form})
 
 
@@ -271,11 +280,13 @@ def reviews_list(request):
 
 @user_passes_test(is_admin)
 def review_create(request):
-    review_form = ReviewForm(request.POST, request.FILES)
     if request.method == "POST":
+        review_form = ReviewForm(request.POST, request.FILES)
         if review_form.is_valid():
             review_form.save()
             return redirect('reviews_list')
+    else:
+        review_form = ReviewForm()
     return render(request, 'custom_admin/reviews/review_create.html', context={'review_form': review_form})
 
 
@@ -362,7 +373,6 @@ def report(request):
 @user_passes_test(is_admin)
 def edit_report(request, pk):
     report = get_object_or_404(Report, pk=pk)
-
     if request.method == 'POST':
         form = ReportForm(request.POST, instance=report)
         if form.is_valid():
@@ -370,18 +380,15 @@ def edit_report(request, pk):
             return redirect('report')
     else:
         form = ReportForm(instance=report)
-
     return render(request, 'custom_admin/reports/edit_report.html', {'form': form})
 
 
 @user_passes_test(is_admin)
 def delete_report(request, pk):
     report = get_object_or_404(Report, pk=pk)
-
     if request.method == 'POST':
         report.delete()
         return redirect('report')
-
     return render(request, 'custom_admin/reports/delete_report.html', {'report': report})
 
 
@@ -394,7 +401,6 @@ def create_report(request):
             return redirect('report')
     else:
         form = ReportForm()
-
     return render(request, 'custom_admin/reports/create_report.html', {'form': form})
 
 
@@ -409,11 +415,13 @@ def report_comments_list(request):
 
 @user_passes_test(is_admin)
 def report_comment_create(request):
-    report_comment_form = ReportCommentForm(request.POST, request.FILES)
     if request.method == "POST":
+        report_comment_form = ReportCommentForm(request.POST, request.FILES)
         if report_comment_form.is_valid():
             report_comment_form.save()
             return redirect('report_comments_list')
+    else:
+        report_comment_form = ReportCommentForm()
     return render(request, 'custom_admin/report_comments/report_comment_create.html', context={'report_comment_form': report_comment_form})
 
 
@@ -439,3 +447,15 @@ def report_comment_delete(request, id):
         report_comment_to_delete.delete()
         return redirect('report_comments_list')
     return render(request, 'custom_admin/report_comments/report_comment_delete.html')
+
+
+def change_password(request, id):
+    user = get_object_or_404(User, id=id)
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('users_list')
+    else:
+        form = SetPasswordForm(user)
+    return render(request, 'custom_admin/change_password.html', context={'form': form})
