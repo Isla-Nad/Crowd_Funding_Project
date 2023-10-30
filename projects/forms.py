@@ -62,22 +62,21 @@ class ProjectForm(ModelForm):
         model = Project
         fields = ['title', 'details',  'category', 'total_target',
                   'start_time', 'end_time', 'tags', 'images', ]
-        def clean(self):
-            cleaned_data = super().clean()
-            start_date = cleaned_data.get("start_time")
-            end_date = cleaned_data.get("end_time")
-            today_date = datetime.strptime(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S")
 
-            if today_date.date() > end_date.date():
-               msg = "End date should be greater than Current date"
-               self._errors["end_time"] = self.error_class([msg])
-            else:
-                if end_date <= start_date:
-                   msg = "End date should be greater than start date."
-                   self._errors["end_time"] = self.error_class([msg])
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get("start_time")
+        end_date = cleaned_data.get("end_time")
+        today_date = datetime.strptime(datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S")
 
-       
-
+        if today_date.date() > end_date.date():
+            msg = "End date should be greater than Current date"
+            self._errors["end_time"] = self.error_class([msg])
+        else:
+            if end_date <= start_date:
+                msg = "End date should be greater than start date."
+                self._errors["end_time"] = self.error_class([msg])
 
 
 class DonationForm(forms.ModelForm):
@@ -90,10 +89,6 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['rating', 'review_desp']
-        
-        
-        
-
 
 
 class ProjectReportForm(forms.ModelForm):
@@ -101,7 +96,9 @@ class ProjectReportForm(forms.ModelForm):
         model = Report
         fields = ['reason', 'description']
 
-#! Report comment 
+#! Report comment
+
+
 class CommentReportForm(forms.ModelForm):
     class Meta:
         model = ReportComment
