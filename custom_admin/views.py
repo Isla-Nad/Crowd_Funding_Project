@@ -208,11 +208,11 @@ def tag_delete(request, id):
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # projects
 
-
 @user_passes_test(is_admin)
-def projects_list(request):
+def admin_projects_list(request):
     projects = Project.objects.all()
-    return render(request, 'custom_admin/projects/projects_list.html', context={"projects": projects})
+    context = {'projects':projects}
+    return render(request,'custom_admin/projects/projects_list.html',context)
 
 
 @user_passes_test(is_admin)
