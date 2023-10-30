@@ -1,118 +1,77 @@
 {% extends 'layouts/base.html' %} {% load static %} {% block title %}Admin Home{% endblock %} {% block content %}
-<h1 class="text-center text-info">Admin Home</h1>
-
-<table class="table table-hover container table-secondary shadow table-striped-columns table-bordered">
-  <thead>
-    <tr>
-      <th scope="col" colspan="2" class="text-center display-5">Authentication and Authorization</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td><a href="{% url 'categories_list' %}" class="">Users</a></td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td><a href="{% url 'tags_list' %}">UsersProfiles</a></td>
-    </tr>
-  </tbody>
-</table>
-<table class="table table-hover container table-secondary shadow table-striped-columns table-bordered">
-  <thead>
-    <tr>
-      <th scope="col" colspan="2" class="text-center display-5">Categories</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td><a href="{% url 'categories_list' %}" class="">Categories</a></td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td><a href="{% url 'tags_list' %}">Tags</a></td>
-    </tr>
-  </tbody>
-</table>
-<table class="table table-hover container table-secondary shadow table-striped-columns table-bordered">
-  <thead>
-    <tr>
-      <th scope="col" colspan="2" class="text-center display-5">Projects</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td><a href="{% url 'categories_list' %}" class="">Projects</a></td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td><a href="{% url 'tags_list' %}">Reviews</a></td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td><a href="{% url 'donation'  %}">Donations</a></td>
-    </tr>
-    <tr>
-      <th scope="row">4</th>
-      <td><a href="{% url 'report'  %}">ProjectReports</a></td>
-    </tr>
-    <tr>
-      <th scope="row">5</th>
-      <td><a href="{% url 'tags_list' %}">CommentReports</a></td>
-    </tr>
-  </tbody>
-</table>
-{% comment %}
 <div class="container my-4">
-  <hr />
-  <h2 class="text-center bg-body-secondary">Create Category</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %} {{ category_form }}
-    <input type="submit" name="category" class="btn btn-outline-success form-control mt-3" value="Create Category" />
-  </form>
+  <h1 class="text-center text-info mb-4">Admin Home</h1>
+
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title text-center display-5">Authentication and Authorization</h2>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'users_list' %}" class="text-primary text-decoration-none"><span class="fw-bold">Users</span></a>
+              <span class="badge bg-secondary">{{ total_users }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'user_profiles_list' %}" class="text-primary text-decoration-none"><span class="fw-bold">User Profiles</span></a>
+              <span class="badge bg-secondary">{{ total_users_profiles }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-10">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title text-center display-5">Categories and Tags</h2>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'categories_list' %}" class="text-primary text-decoration-none"><span class="fw-bold">Categories</span></a>
+              <span class="badge bg-secondary">{{ total_categories }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'tags_list' %}" class="text-primary text-decoration-none"><span class="fw-bold">Tags</span></a>
+              <span class="badge bg-secondary">{{ total_tags }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-10">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title text-center display-5">Projects</h2>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'projects_list' %}" class="text-primary text-decoration-none"><span class="fw-bold">Projects</span></a>
+              <span class="badge bg-secondary">{{ total_projects }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'reviews_list' %}" class="text-primary text-decoration-none"><span class="fw-bold">Reviews</span></a>
+              <span class="badge bg-secondary">{{ total_reviews }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'donation' %}" class="text-primary text-decoration-none"><span class="fw-bold">Donations</span></a>
+              <span class="badge bg-secondary">{{ total_donations }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'report' %}" class="text-primary text-decoration-none"><span class="fw-bold">Project Reports</span></a>
+              <a href="{% url 'report' %}" class="text-primary"></a>
+              <span class="badge bg-secondary">{{ total_projects_reports }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <a href="{% url 'report_comments_list' %}" class="text-primary text-decoration-none"><span class="fw-bold">Comment Reports</span></a>
+              <span class="badge bg-secondary">{{ total_comments_reports }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="container my-4">
-  <hr />
-  <h2 class="text-center bg-body-secondary">Create Tag</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %} {{ tag_form }}
-    <input type="submit" name="tag" class="btn btn-outline-success form-control mt-3" value="Create Tag" />
-  </form>
-</div>
-<hr />
+<script src="{% static 'projects/js/script.js' %}"></script>
 
-<div class="container my-4">
-  <h2>Categories</h2>
-  <ul class="list-group">
-    {% for category in categories %}
-    <li class="list-group-item d-flex justify-content-between">
-      {{ category.name }}
-      <form method="post" style="display: inline">
-        {% csrf_token %} <button type="submit" name="edit_category_{{ category.id }}" class="btn btn-info btn-sm float-right">Edit</button>
-        <button type="submit" name="delete_category_{{ category.id }}" class="btn btn-danger btn-sm float-right mr-2">Delete</button>
-      </form>
-    </li>
-    {% endfor %}
-  </ul>
-</div>
-
-<div class="container my-4">
-  <h2>Tags</h2>
-  <ul class="list-group">
-    {% for tag in tags %}
-    <li class="list-group-item d-flex justify-content-between">
-      {{ tag.name }}
-      <form method="post" style="display: inline">
-        {% csrf_token %} <button type="submit" name="edit_tag_{{ tag.id }}" class="btn btn-info btn-sm float-right">Edit</button>
-        <button type="submit" name="delete_tag_{{ tag.id }}" class="btn btn-danger btn-sm float-right mr-2">Delete</button>
-      </form>
-    </li>
-    {% endfor %}
-  </ul>
-</div>
-{% endcomment %}
-<script src="{% static 'projects/js/script.js'%}"></script>
-{% endblock%}
+{% endblock %}
