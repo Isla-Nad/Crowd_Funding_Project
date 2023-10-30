@@ -3,8 +3,8 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from projects.forms import ProjectReportForm, CommentReportForm
-from django.shortcuts import get_object_or_404, render, redirect ,HttpResponse
-from django.urls import reverse 
+from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
+from django.urls import reverse
 from django.db.models import Sum, Avg, Count
 from projects.forms import DonationForm, ProjectForm,  ReviewForm
 from projects.models import Donation, ProjectImage, Project, Review
@@ -230,59 +230,3 @@ def report_comment_view(request, id):
 
     context = {'reportform': form, 'review': review}
     return render(request, 'report/reportcomment.html', context)
-
-
-##! admin 
-
-def admin_project(request):
-    projects = Project.objects.all()
-    context = {'projects':projects}
-    return render(request,'admin.html',context)
-
-# delete 
-def admin_delete_project(request,id):
-    project = get_object_or_404(Project,pk=id)
-    project.delete()
-    return redirect('admin.project')
-
-# create 
-@login_required
-def admin_create_project(request):
-    form = ProjectForm
-    if request.method == "POST":
-        form = ProjectForm(request.POST, request.FILES)
-        if form.is_valid():
-            user = request.user 
-            project = form.save(commit=False)
-            project.user = user  
-            project.save()
-            tags = form.cleaned_data['tags']
-            project.tags.set(tags)
-            images = request.FILES.getlist('images')
-            for image in images:
-                project_image = ProjectImage(project=project, image=image)
-                project_image.save()
-            return redirect('admin.project')
-    context = {"form":form}
-    return render(request,'createproject.html',context)
-
-def admin_update_project(request,id):
-    project = get_object_or_404(Project,pk=id)
-    form = ProjectForm(instance=project)
-    if request.method == "POST":
-        form = ProjectForm(request.POST, request.FILES,instance=project)
-        if form.is_valid():
-            user = request.user 
-            project = form.save(commit=False)
-            project.user = user  
-            project.save()
-            tags = form.cleaned_data['tags']
-            project.tags.set(tags)
-            images = request.FILES.getlist('images')
-            for image in images:
-                project_image = ProjectImage(project=project, image=image)
-                project_image.save()
-            return redirect('admin.project')
-
-    context = {"form":form,"project":project}
-    return render(request,'updateproject.html',context)

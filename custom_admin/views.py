@@ -208,13 +208,16 @@ def tag_delete(request, id):
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # projects
 
+
 @user_passes_test(is_admin)
 def admin_projects_list(request):
     projects = Project.objects.all()
-    context = {'projects':projects}
-    return render(request,'custom_admin/projects/projects_list.html',context)
+    context = {'projects': projects}
+    return render(request, 'custom_admin/projects/projects_list.html', context)
 
-# create 
+# create
+
+
 @user_passes_test(is_admin)
 def admin_create_project(request):
     form = ProjectForm
@@ -227,36 +230,34 @@ def admin_create_project(request):
             for image in images:
                 project_image = ProjectImage(project=project, image=image)
                 project_image.save()
-            return redirect('admin.project')
+            return redirect('projects_list')
     context = {'project_form': form}
-    return render(request,'custom_admin/projects/project_create.html',context)
-
+    return render(request, 'custom_admin/projects/project_create.html', context)
 
 
 @user_passes_test(is_admin)
-def admin_update_project(request,id):
-    project = get_object_or_404(Project,pk=id)
+def admin_update_project(request, id):
+    project = get_object_or_404(Project, pk=id)
     form = ProjectForm(instance=project)
     if request.method == "POST":
-        form = ProjectForm(request.POST, request.FILES,instance=project)
+        form = ProjectForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
-            user = request.user 
+            user = request.user
             project = form.save(commit=False)
-            project.user = user  
+            project.user = user
             project.save()
             return redirect('projects_list')
     context = {'project_form': form}
-    return render(request,'custom_admin/projects/project_edit.html',context)
-
+    return render(request, 'custom_admin/projects/project_edit.html', context)
 
 
 @user_passes_test(is_admin)
-def admin_delete_project(request,id):
-    project = get_object_or_404(Project,pk=id)
+def admin_delete_project(request, id):
+    project = get_object_or_404(Project, pk=id)
     if request.method == 'POST':
         project.delete()
         return redirect('projects_list')
-    return render(request,'custom_admin/projects/project_delete.html')
+    return render(request, 'custom_admin/projects/project_delete.html')
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # reviews
