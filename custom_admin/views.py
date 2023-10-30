@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from custom_admin.forms import CategoryForm, ReportForm, ReviewForm, TagForm, DonationForm, UserChangeForm, UserForm, UserProfileForm
+from custom_admin.forms import CategoryForm, ReportCommentForm, ReportForm, ReviewForm, TagForm, DonationForm, UserChangeForm, UserForm, UserProfileForm
 from categories.models import Category, Tag
 from django.contrib.auth.decorators import user_passes_test
 
@@ -360,3 +360,37 @@ def create_report(request):
 def report_comments_list(request):
     report_comments = ReportComment.objects.all()
     return render(request, 'custom_admin/report_comments/report_comments_list.html', context={"report_comments": report_comments})
+
+
+@user_passes_test(is_admin)
+def report_comment_create(request):
+    report_comment_form = ReportCommentForm(request.POST, request.FILES)
+    if request.method == "POST":
+        if report_comment_form.is_valid():
+            report_comment_form.save()
+            return redirect('report_comments_list')
+    return render(request, 'custom_admin/report_comments/report_comment_create.html', context={'report_comment_form': report_comment_form})
+
+
+@user_passes_test(is_admin)
+def report_comment_edit(request, id):
+    report_comment_to_edit = get_object_or_404(ReportComment, id=id)
+    if request.method == 'POST':
+        report_comment_form = ReportCommentForm(
+            request.POST, request.FILES, instance=report_comment_to_edit)
+        if report_comment_form.is_valid():
+            report_comment_form.save()
+            return redirect('report_comments_list')
+    else:
+        report_comment_form = ReportCommentForm(
+            instance=report_comment_to_edit)
+    return render(request, 'custom_admin/report_comments/report_comment_edit.html', context={'report_comment_form': report_comment_form})
+
+
+@user_passes_test(is_admin)
+def report_comment_delete(request, id):
+    report_comment_to_delete = get_object_or_404(ReportComment, id=id)
+    if request.method == 'POST':
+        report_comment_to_delete.delete()
+        return redirect('report_comments_list')
+    return render(request, 'custom_admin/report_comments/report_comment_delete.html')
