@@ -283,8 +283,13 @@ def review_create(request):
     if request.method == "POST":
         review_form = ReviewForm(request.POST, request.FILES)
         if review_form.is_valid():
-            review_form.save()
-            return redirect('reviews_list')
+            rating = review_form.cleaned_data.get('rating')
+            if rating is not None and 0 <= rating <= 5:
+                review_form.save()
+                return redirect('reviews_list')
+            else:
+                review_form.add_error(
+                    'rating', 'Rating must be between 0 and 5.')
     else:
         review_form = ReviewForm()
     return render(request, 'custom_admin/reviews/review_create.html', context={'review_form': review_form})
@@ -297,8 +302,13 @@ def review_edit(request, id):
         review_form = ReviewForm(
             request.POST, request.FILES, instance=review_to_edit)
         if review_form.is_valid():
-            review_form.save()
-            return redirect('reviews_list')
+            rating = review_form.cleaned_data.get('rating')
+            if rating is not None and 0 <= rating <= 5:
+                review_form.save()
+                return redirect('reviews_list')
+            else:
+                review_form.add_error(
+                    'rating', 'Rating must be between 0 and 5.')
     else:
         review_form = ReviewForm(instance=review_to_edit)
     return render(request, 'custom_admin/reviews/review_edit.html', context={'review_form': review_form})

@@ -167,11 +167,10 @@ def send_report_notification(report):
     message = f'''A new report has been submitted for the project: {report.project}
                 for reason {report.reason}
                 and detials {report.description}.'''
-    from_email = settings.EMAIL_HOST_USER
-    # from_email = 'islamnady95@hotmail.com'
-    # List of admin email addresses
-    recipient_list = ['kadem73980@tutoreve.com',]
-    # recipient_list = ['islamnady95@gmail.com',]
+    from_email = 'islamnady95@hotmail.com'
+    recipient_list = ['islamnady95@gmail.com',]
+    # from_email = settings.EMAIL_HOST_USER
+    # recipient_list = ['kadem73980@tutoreve.com',]
 
     send_mail(subject, message, from_email,
               recipient_list, fail_silently=False)
@@ -205,8 +204,10 @@ def send_report_notification_comment(report):
     message = f'''A new report has been submitted for the Comment: {report.review.review_desp}
                 for reason {report.reason}
                 and detials {report.description}.'''
-    from_email = settings.EMAIL_HOST_USER
-    recipient_list = ['kadem73980@tutoreve.com',]
+    from_email = 'islamnady95@hotmail.com'
+    recipient_list = ['islamnady95@gmail.com',]
+    # from_email = settings.EMAIL_HOST_USER
+    # recipient_list = ['kadem73980@tutoreve.com',]
 
     send_mail(subject, message, from_email,
               recipient_list, fail_silently=False)
